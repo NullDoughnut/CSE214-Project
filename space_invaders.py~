@@ -100,8 +100,6 @@ def main() -> None:
         stddraw.show(20)
 
         if stddraw.hasNextKeyTyped():
-
-            # used repr(stddraw.nextKeyTyped()) to find out what code is mapped to ENTER
             if stddraw.nextKeyTyped() == "x":
                 break
 
