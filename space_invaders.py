@@ -1,5 +1,6 @@
 import stdio, stddraw
-
+from shooter import Shooter
+from game_manager import Game_manager
 
 def main() -> None:
     ############ TITLE SCREEN ############
@@ -101,8 +102,31 @@ def main() -> None:
 
         if stddraw.hasNextKeyTyped():
             if stddraw.nextKeyTyped() == "x":
+                quit()
+            else:
                 break
+    shooter = Shooter()
+    manager = Game_manager()
+    manager.create_enemies()
 
+    while True:
+        stddraw.clear(stddraw.BLACK)
+        if stddraw.hasNextKeyTyped():
+            key = stddraw.nextKeyTyped()
+            if key == 'a':
+                shooter.move_left()
+            elif key == 'd':
+                shooter.move_right()
+            elif key == 'q':
+                shooter.rotate_left()
+            elif key == 'e':
+                shooter.rotate_right()
+            elif key == 'x':
+                break
+        manager.refresh_enemies()
+        manager.draw_enemies()
+        shooter.draw()
+        stddraw.show(20)
 
 if __name__ == "__main__":
     main()
