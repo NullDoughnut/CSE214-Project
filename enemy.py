@@ -1,4 +1,6 @@
 import stddraw
+
+
 class Enemy:
     x = 0
     y = 0

@@ -2,6 +2,21 @@ import stdio, stddraw
 from shooter import Shooter
 from game_manager import Game_manager
 
+####### COLLISION FUNCTION ###########
+#               LOG_1                #
+# name:     Dillan van Wyk           #
+# date:     26/02/26                 #
+# change:   making a collision func  #
+######################################
+
+
+def collision(projectile, enemy):
+    dx = projectile.x - enemy.x
+    dy = projectile.y - enemy.y
+    distance = (dx**2 + dy**2) ** 0.5
+
+    return distance <= (enemy.radius + projectile.radius)
+
 
 def main() -> None:
     ############ TITLE SCREEN ############
@@ -142,6 +157,13 @@ def main() -> None:
 
         if cooldown > 0:
             cooldown -= 1
+
+        for p in projectiles[:]:
+            for e in manager.enemies:
+                if e.alive and collision(p, e):
+                    e.alive = False
+                    projectiles.remove(p)
+                    break
 
         for i in projectiles:
             i.move()

@@ -15,6 +15,7 @@ class Projectile:
     angle = 90
     speed = 15
     radius = 5
+    alive = True
 
     def move(self):
         self.x += self.speed * math.cos(math.radians(self.angle))
@@ -22,4 +23,5 @@ class Projectile:
 
     def draw(self):
         stddraw.setPenColor(stddraw.WHITE)
-        stddraw.filledCircle(self.x, self.y, self.radius)
+        if self.alive:
+            stddraw.filledCircle(self.x, self.y, self.radius)
