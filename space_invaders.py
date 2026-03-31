@@ -42,8 +42,14 @@ def main() -> None:
         stddraw.text(WIDTH / 2, HEIGHT * 15 / 20, "Instructions:")
 
         stddraw.setFontSize(BODY_FONT)
-        stddraw.text(WIDTH / 2, HEIGHT * 12 / 20, "[A] move left, [D] move right")
-        stddraw.text(WIDTH / 2, HEIGHT * 11 / 20, "[Q] rotate left, [E] rotate right")
+        stddraw.text(
+            WIDTH / 2, HEIGHT * 12 / 20, "[A] move left, [S] stop move, [D] move right"
+        )
+        stddraw.text(
+            WIDTH / 2,
+            HEIGHT * 11 / 20,
+            "[Q] rotate left, [W] stop rotate, [E] rotate right",
+        )
         stddraw.text(WIDTH / 2, HEIGHT * 10 / 20, "[Space] to shoot")
         stddraw.text(WIDTH / 2, HEIGHT * 8 / 20, "[H] for help")
         stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[X] to quit")
