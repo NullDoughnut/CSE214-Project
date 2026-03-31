@@ -2,6 +2,7 @@ import stdio, stddraw
 from shooter import Shooter
 from game_manager import Game_manager
 
+
 def main() -> None:
     ############ TITLE SCREEN ############
     #               LOG_1                #
@@ -109,25 +110,50 @@ def main() -> None:
     manager = Game_manager()
     manager.create_enemies()
 
+    ############ PROJECTILES ##############
+    #               LOG_1                 #
+    # name:     Dillan van Wyk            #
+    # date:     31/03/26                  #
+    # change:   added ability to shoot    #
+    #######################################
+
+    projectiles = []
+    max_cooldown = 15
+    cooldown = max_cooldown
+
     while True:
         stddraw.clear(stddraw.BLACK)
         if stddraw.hasNextKeyTyped():
             key = stddraw.nextKeyTyped()
-            if key == 'a':
+            if key == "a":
                 shooter.move_left()
-            elif key == 'd':
+            elif key == "d":
                 shooter.move_right()
-            elif key == 'q':
+            elif key == "q":
                 shooter.rotate_left()
-            elif key == 'e':
+            elif key == "e":
                 shooter.rotate_right()
-            elif key == 'x':
+            elif key == "u":
+                if cooldown == 0:
+                    projectiles.append(shooter.shoot())
+                    cooldown = max_cooldown
+            elif key == "x":
                 break
+
+        if cooldown > 0:
+            cooldown -= 1
+
+        for i in projectiles:
+            i.move()
+
+        for i in projectiles:
+            i.draw()
+
         manager.refresh_enemies()
         manager.draw_enemies()
         shooter.draw()
         stddraw.show(20)
 
+
 if __name__ == "__main__":
     main()
-

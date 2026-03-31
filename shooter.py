@@ -1,4 +1,5 @@
 import math, stddraw
+from projectile import Projectile
 
 
 class Shooter:
@@ -15,7 +16,7 @@ class Shooter:
         stddraw.filledCircle(
             self.x, self.y, self.radius
         )  # draws shooter body at current coordinate
-        stddraw.setPenRadius(1) 
+        stddraw.setPenRadius(1)
         stddraw.line(
             self.x,
             self.y,
@@ -46,3 +47,20 @@ class Shooter:
             self.angle += self.rotate_speed  # rotates shooter left
         else:
             self.angle = 180
+
+    ############ PROJECTILES #################
+    #               LOG_1                    #
+    # name:     Dillan van Wyk               #
+    # date:     31/03/26                     #
+    # change:   making shooter able to shoot #
+    ##########################################
+
+    def shoot(self):
+        p = Projectile()
+
+        # intializes the starting position and angle for the projectile
+        p.x = self.x + self.turret_length * math.cos(math.radians(self.angle))
+        p.y = self.y + self.turret_length * math.sin(math.radians(self.angle))
+        p.angle = self.angle
+
+        return p
