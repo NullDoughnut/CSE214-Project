@@ -1,14 +1,8 @@
-############ PROJECTILES ##############
-#               LOG_1                 #
-# name:     Dillan van Wyk            #
-# date:     31/03/26                  #
-# change:   made the projectile class #
-#######################################
-
 import stddraw
 import math
 
 
+# 31/03/26: Dillan van Wyk: Made the Projectile class and the move() and draw() functions
 class Projectile:
     x = 0
     y = 0

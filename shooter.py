@@ -48,13 +48,7 @@ class Shooter:
         else:
             self.angle = 180
 
-    ############ PROJECTILES #################
-    #               LOG_1                    #
-    # name:     Dillan van Wyk               #
-    # date:     31/03/26                     #
-    # change:   making shooter able to shoot #
-    ##########################################
-
+    # 31/02/26: Dillan van Wyk: Gave the shooter the ability to shoot projectiles
     def shoot(self):
         p = Projectile()
 

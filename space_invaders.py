@@ -2,62 +2,47 @@ import stdio, stddraw
 from shooter import Shooter
 from game_manager import Game_manager
 
-####### COLLISION FUNCTION ###########
-#               LOG_1                #
-# name:     Dillan van Wyk           #
-# date:     26/02/26                 #
-# change:   making a collision func  #
-######################################
 
-
+# 31/03/26: Dillan van Wyk: Added function to check for collisions and implemented it
 def collision(projectile, enemy):
     dx = projectile.x - enemy.x
     dy = projectile.y - enemy.y
     distance = (dx**2 + dy**2) ** 0.5
-
     return distance <= (enemy.radius + projectile.radius)
 
 
 def main() -> None:
-    ############ TITLE SCREEN ############
-    #               LOG_1                #
-    # name:     Dillan van Wyk           #
-    # date:     26/02/26                 #
-    # change:   set up the title screen  #
-    ######################################
+    # Screen setup
+    x_scale_min, y_scale_min = 0, 0
+    x_scale_max, y_scale_max = 600, 600
+    x_canvas, y_canvas = 500, 500
 
-    ##$ I'D LIKE TO MOVE ALL OF THIS TO A DIFFERENT FILE WITH DIFFERENT CLASSES $##
+    # Font sizes
+    main_title_font_size = 0.07
+    subtitle_font_size = 0.05
+    body_font_size = 0.04
 
-    ### set up screen ###
-    ## variables to make the program scaleable
-
-    # x and y axis scales
-    x_scale_min: int = 0
-    y_scale_min: int = 0
-    x_scale_max: int = 600
-    y_scale_max: int = 600
-
-    # canvas sizing
-    ##$ maybe merge them into one variable calles canvas_size so that the canvas stays a square
-    x_canvas: int = 500
-    y_canvas: int = 500
-
-    # font sizing
-    main_title_font_size: float = 0.07
-    subtitle_font_size: float = 0.05
-    body_font_size: float = 0.04
-
-    ## initializing the canvas
+    # Canvas initialization
     stddraw.setCanvasSize(x_canvas, y_canvas)
     stddraw.setXscale(x_scale_min, x_scale_max)
     stddraw.setYscale(y_scale_min, y_scale_max)
 
-    ### putting everything onto the canvas ###
+    # Shooter and enemies
+    shooter = Shooter()
+    manager = Game_manager()
+    manager.create_enemies()
+
+    # Projectiles
+    projectiles = []
+    max_cooldown = 15
+    cooldown = max_cooldown
+
+    # Title screen
+    # 26/02/26: Dillan van Wyk: set up the title screen
     while True:
         stddraw.clear(stddraw.BLACK)
         stddraw.setPenColor(stddraw.WHITE)
 
-        ## drawing all of the text onto the canvas
         stddraw.setFontSize(int(x_canvas * main_title_font_size))
         stddraw.text(
             (x_scale_min + x_scale_max) / 2,
@@ -78,29 +63,21 @@ def main() -> None:
             (y_scale_min + y_scale_max) * 12 / 20,
             "[A] move left, [S] stop move, [D] move right",
         )
-
-        stddraw.setFontSize(int(x_canvas * body_font_size))
         stddraw.text(
             (x_scale_min + x_scale_max) / 2,
             (y_scale_min + y_scale_max) * 11 / 20,
             "[Q] rotate left, [W] stop rotate, [E] rotate right",
         )
-
-        stddraw.setFontSize(int(x_canvas * body_font_size))
         stddraw.text(
             (x_scale_min + x_scale_max) / 2,
             (y_scale_min + y_scale_max) * 10 / 20,
             "[Space] to shoot",
         )
-
-        stddraw.setFontSize(int(x_canvas * body_font_size))
         stddraw.text(
             (x_scale_min + x_scale_max) / 2,
             (y_scale_min + y_scale_max) * 8 / 20,
             "[H] for help",
         )
-
-        stddraw.setFontSize(int(x_canvas * body_font_size))
         stddraw.text(
             (x_scale_min + x_scale_max) / 2,
             (y_scale_min + y_scale_max) * 7 / 20,
@@ -113,7 +90,7 @@ def main() -> None:
             (y_scale_min + y_scale_max) * 4 / 20,
             "Press any key to start",
         )
-        # stddraw.show(x) always must be called after all the drawing has taken place
+
         stddraw.show(20)
 
         if stddraw.hasNextKeyTyped():
@@ -121,23 +98,12 @@ def main() -> None:
                 quit()
             else:
                 break
-    shooter = Shooter()
-    manager = Game_manager()
-    manager.create_enemies()
 
-    ############ PROJECTILES ##############
-    #               LOG_1                 #
-    # name:     Dillan van Wyk            #
-    # date:     31/03/26                  #
-    # change:   added ability to shoot    #
-    #######################################
-
-    projectiles = []
-    max_cooldown = 15
-    cooldown = max_cooldown
-
+    # Main game loop
     while True:
         stddraw.clear(stddraw.BLACK)
+
+        # Input handling
         if stddraw.hasNextKeyTyped():
             key = stddraw.nextKeyTyped()
             if key == "a":
@@ -155,9 +121,11 @@ def main() -> None:
             elif key == "x":
                 break
 
+        # Cooldown countdown
         if cooldown > 0:
             cooldown -= 1
 
+        # 31/03/26: Dillan van Wyk: Projectile collisions with enemies
         for p in projectiles[:]:
             for e in manager.enemies:
                 if e.alive and collision(p, e):
@@ -165,15 +133,24 @@ def main() -> None:
                     projectiles.remove(p)
                     break
 
-        for i in projectiles:
-            i.move()
+        # 31/03/26: Dillan van Wyk: Projectile movement, projectile drawing and off-screen removal
+        for i in projectiles[:]:
+            if (i.x < x_scale_min or i.x > x_scale_max) or (
+                i.y < y_scale_min or i.y > y_scale_max
+            ):
+                projectiles.remove(i)
+            else:
+                i.move()
 
+        # Draw projectiles
         for i in projectiles:
             i.draw()
 
+        # Draw enemies and shooter
         manager.refresh_enemies()
         manager.draw_enemies()
         shooter.draw()
+
         stddraw.show(20)
 
 
