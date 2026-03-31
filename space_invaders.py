@@ -148,7 +148,7 @@ def main() -> None:
                 shooter.rotate_left()
             elif key == "e":
                 shooter.rotate_right()
-            elif key == "u":
+            elif key == " ":
                 if cooldown == 0:
                     projectiles.append(shooter.shoot())
                     cooldown = max_cooldown
