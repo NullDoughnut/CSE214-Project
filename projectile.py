@@ -1,5 +1,8 @@
 import stddraw
 import math
+from audio_manager import Audio_Manager
+
+audio = Audio_Manager()
 
 
 # 31/03/26: Dillan van Wyk: Added function to check for collisions and implemented it
@@ -64,3 +67,4 @@ class Projectile_Manager:
         if self.cooldown == 0:
             self.projectiles.append(shooter.shoot())
             self.cooldown = self.max_cooldown
+            audio.play_tone(4400, 0.05)

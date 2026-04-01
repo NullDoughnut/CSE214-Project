@@ -3,6 +3,7 @@ from shooter import Shooter
 from game_manager import Game_manager
 from projectile import Projectile_Manager
 from score_manager import Score_Manager
+from audio_manager import Audio_Manager
 
 # Game world constants
 WIDTH = 600
@@ -32,6 +33,9 @@ def main() -> None:
 
     # Scores
     score_manager = Score_Manager()
+
+    # Audio
+    audio_manager = Audio_Manager()
 
     # Game state and timer
     # 01/04/26: Dillan van Wyk: created infinite game loop
