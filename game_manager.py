@@ -45,7 +45,7 @@ class Game_manager:
             self.enemies[i].draw()
 
     # 31/03/26: Denlan Molokwu: Added game over screen
-    # 01/04/26: Dillan van Wyk: Changed logic for when game over screen is displayed and added check for bottom of screen
+    # 01/04/26: Dillan van Wyk: Changed logic for when game over screen is displayed and added check for bottom of screen and added self.enemies.clear()
     def check_gameover(
         self, shooter_y, shooter_x, shooter_radius, turrent_length, bottom_edge_y
     ):
@@ -66,6 +66,7 @@ class Game_manager:
                     )
                     or (enemy.y - enemy.radius) <= bottom_edge_y
                 ):  # this line checks the bottom of the enemy row that is still alive and compares it to the turrets y coordinate
+                    self.enemies.clear()
                     return True
         return False
 

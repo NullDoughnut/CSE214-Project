@@ -29,13 +29,15 @@ def main() -> None:
 
     # Projectiles
     projectile_manager = Projectile_Manager()
-    # Game Over and scores
 
+    # Scores
     score_manager = Score_Manager()
-    is_game_over = False
-    is_winner = False
 
-    # Title screen
+    # Game state and timer
+    # 01/04/26: Dillan van Wyk: created infinite game loop
+    game_state = "playing"  # "playing", "game_over", "winner"
+    state_timer = 0
+
     # 26/02/26: Dillan van Wyk: set up the title screen
     while True:
         stddraw.clear(stddraw.BLACK)
@@ -75,19 +77,47 @@ def main() -> None:
     while True:
         stddraw.clear(stddraw.BLACK)
 
-        if is_winner == True:
+        if game_state == "winner":
             score_manager.draw_winner(WIDTH, HEIGHT)
+            state_timer += 1
+
+            if state_timer >= 100:
+                # Resets game
+                shooter = Shooter()
+                manager = Game_manager()
+                manager.create_enemies()
+                projectile_manager = Projectile_Manager()
+
+                game_state = "playing"
+                state_timer = 0
 
             if stddraw.hasNextKeyTyped():
                 if stddraw.nextKeyTyped() == "x":
                     break
 
-        elif is_game_over == True:
+            stddraw.show(20)
+            continue
+
+        elif game_state == "game_over":
             score_manager.draw_game_over(WIDTH, HEIGHT)
+            state_timer += 1
+
+            if state_timer >= 100:
+                # Resets game
+                shooter = Shooter()
+                manager = Game_manager()
+                manager.create_enemies()
+                projectile_manager = Projectile_Manager()
+
+                game_state = "playing"
+                state_timer = 0
 
             if stddraw.hasNextKeyTyped():
                 if stddraw.nextKeyTyped() == "x":
                     break
+
+            stddraw.show(20)
+            continue
 
         else:
 
@@ -116,19 +146,14 @@ def main() -> None:
         manager.draw_enemies()
         shooter.draw()
 
-        if is_winner == False:
-            is_winner = manager.check_win()
+        if game_state == "playing":
+            if manager.check_win():
+                game_state = "winner"
 
-        if is_game_over == False:
-            is_game_over = manager.check_gameover(
+            elif manager.check_gameover(
                 shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
-            )
-
-        if is_game_over == True:
-            score_manager.draw_game_over(WIDTH, HEIGHT)
-
-        elif is_winner == True:
-            score_manager.draw_winner(WIDTH, HEIGHT)
+            ):
+                game_state = "game_over"
 
         stddraw.show(20)
 
