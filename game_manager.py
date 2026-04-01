@@ -1,13 +1,12 @@
 from enemy import Enemy
 
 
-
 class Game_manager:
     enemies = []  # list to store all enemy objects
     speed_x = 3  # speed of enemys in x direction
     speed_y = 30  # speed of enemys in y direction
 
-    drop_count = 0 # this creates a variable that keeps track of how many times the enemies dropped
+    drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
 
     def create_enemies(self):
         rows = 3  # number of enemy rows
@@ -45,21 +44,34 @@ class Game_manager:
         for i in range(len(self.enemies)):
             self.enemies[i].draw()
 
-    def check_gameover(self, shooter_y):
+    # 31/03/26: Denlan Molokwu: Added game over screen
+    # 01/04/26: Dillan van Wyk: Changed logic for when game over screen is displayed and added check for bottom of screen
+    def check_gameover(
+        self, shooter_y, shooter_x, shooter_radius, turrent_length, bottom_edge_y
+    ):
+        # gets the absolute tip op the shooter
+        y_s = shooter_y + turrent_length
 
-        for enemy in self.enemies:#looking into the list of the enemies
+        # gets the left and right most points of the shooter
+        x_s_left = shooter_x - shooter_radius
+        x_s_right = shooter_x + shooter_radius
+
+        for enemy in self.enemies:  # looking into the list of the enemies
             if enemy.alive == True:
-                if (enemy.y - enemy.radius) <= shooter_y:     #this line checks the bottom of the enemy row that is still alive and compares it to the turrets y coordinate
+                if (
+                    (enemy.y - enemy.radius) <= y_s
+                    and (
+                        (enemy.x + enemy.radius) >= x_s_left
+                        and (enemy.x - enemy.radius) <= x_s_right
+                    )
+                    or (enemy.y - enemy.radius) <= bottom_edge_y
+                ):  # this line checks the bottom of the enemy row that is still alive and compares it to the turrets y coordinate
                     return True
         return False
+
     def check_win(self):
-        
+
         for enemy in self.enemies:
             if enemy.alive == True:
                 return False
         return True
-                
-
-
-
-

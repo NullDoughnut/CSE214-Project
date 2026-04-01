@@ -29,12 +29,11 @@ def main() -> None:
 
     # Projectiles
     projectile_manager = Projectile_Manager()
-    #Game Over and scores
+    # Game Over and scores
 
     score_manager = Score_Manager()
     is_game_over = False
     is_winner = False
-
 
     # Title screen
     # 26/02/26: Dillan van Wyk: set up the title screen
@@ -76,18 +75,15 @@ def main() -> None:
     while True:
         stddraw.clear(stddraw.BLACK)
 
-        if is_winner == True: 
-            score_manager.draw_winner(WIDTH,HEIGHT)
-
+        if is_winner == True:
+            score_manager.draw_winner(WIDTH, HEIGHT)
 
             if stddraw.hasNextKeyTyped():
                 if stddraw.nextKeyTyped() == "x":
                     break
 
-
-        elif is_game_over == True: 
-            score_manager.draw_game_over(WIDTH,HEIGHT)
-
+        elif is_game_over == True:
+            score_manager.draw_game_over(WIDTH, HEIGHT)
 
             if stddraw.hasNextKeyTyped():
                 if stddraw.nextKeyTyped() == "x":
@@ -95,7 +91,7 @@ def main() -> None:
 
         else:
 
-        # Input handling
+            # Input handling
             if stddraw.hasNextKeyTyped():
                 key = stddraw.nextKeyTyped()
                 if key == "a":
@@ -120,23 +116,19 @@ def main() -> None:
         manager.draw_enemies()
         shooter.draw()
 
-        shooter_y = (shooter.y) + (shooter.turret_length) #gets the absolute tip of shooter
+        if is_winner == False:
+            is_winner = manager.check_win()
 
-        if manager.check_gameover(shooter_y) == True:
-            is_game_over = True   #This creates a game over screen
-                
+        if is_game_over == False:
+            is_game_over = manager.check_gameover(
+                shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
+            )
 
         if is_game_over == True:
             score_manager.draw_game_over(WIDTH, HEIGHT)
 
-        elif manager.check_win() == True:
-            is_winner = True   #This creates a winner screen
-                
-
         elif is_winner == True:
             score_manager.draw_winner(WIDTH, HEIGHT)
-
-         
 
         stddraw.show(20)
 
