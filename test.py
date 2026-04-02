@@ -2,26 +2,43 @@ import stddraw
 from shooter import Shooter
 
 stddraw.setCanvasSize(600, 600)
-stddraw.setXscale(0, 100)
-stddraw.setYscale(0, 100)
+stddraw.setXscale(0, 600)
+stddraw.setYscale(0, 600)
 
-s = Shooter()
+shooter = Shooter()
+move_state = None
+rotate_state = None
 
 while True:
-    stddraw.clear(stddraw.GRAY)
+    stddraw.clear(stddraw.BLACK)
 
     if stddraw.hasNextKeyTyped():
         key = stddraw.nextKeyTyped()
         if key == 'a':
-            s.move_left()
+            move_state = "left"
         elif key == 'd':
-            s.move_right()
+            move_state = "right"
         elif key == 'q':
-            s.rotate_left()
+            rotate_state = "left"
         elif key == 'e':
-            s.rotate_right()
+            rotate_state = "right"
+        elif key == "s":
+            move_state = None
+        elif key == "w":
+            rotate_state = None
         elif key == 'x':
             break
 
-    s.draw()
+
+    if move_state == "left":
+        shooter.move_left()
+    elif move_state == "right":
+        shooter.move_right()
+    if rotate_state == "left":
+        shooter.rotate_left()
+    elif rotate_state == "right":
+        shooter.rotate_right()
+
+
+    shooter.draw()
     stddraw.show(20)

@@ -1,7 +1,7 @@
 import math, stddraw
 from projectile import Projectile
 
-
+# 30/03/26: Luke Abrahamse: Created Shooter Class. Added draw, move and rotate functions
 class Shooter:
     x = 300  # starting x coordinates
     y = 30  # starting y coordinate

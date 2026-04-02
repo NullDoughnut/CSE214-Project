@@ -16,7 +16,6 @@ TITLE_FONT = 35
 SUBTITLE_FONT = 25
 BODY_FONT = 18
 
-
 def main() -> None:
     # Canvas setup
     stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
@@ -41,6 +40,10 @@ def main() -> None:
     # 01/04/26: Dillan van Wyk: created infinite game loop
     game_state = "playing"  # "playing", "game_over", "winner"
     state_timer = 0
+
+    # Movement states
+    move_state = None
+    rotate_state = None
 
     # 26/02/26: Dillan van Wyk: set up the title screen
     while True:
@@ -132,23 +135,33 @@ def main() -> None:
         else:
             score_manager.score_tracking(current_score)
             
-
-
-            # Input handling
+    # 02/04/26: Luke Abrahamse: Added movement and rotation of shooter
             if stddraw.hasNextKeyTyped():
                 key = stddraw.nextKeyTyped()
-                if key == "a":
-                    shooter.move_left()
-                elif key == "d":
-                    shooter.move_right()
-                elif key == "q":
-                    shooter.rotate_left()
-                elif key == "e":
-                    shooter.rotate_right()
+                if key == 'a':
+                    move_state = "left"
+                elif key == 'd':
+                    move_state = "right"
+                elif key == 'q':
+                    rotate_state = "left"
+                elif key == 'e':
+                    rotate_state = "right"
+                elif key == "s":
+                    move_state = None
+                elif key == "w":
+                    rotate_state = None
                 elif key == " ":
                     projectile_manager.shoot(shooter)
                 elif key == "x":
                     break
+            if move_state == "left":
+                shooter.move_left()
+            elif move_state == "right":
+                shooter.move_right()
+            if rotate_state == "left":
+                shooter.rotate_left()
+            elif rotate_state == "right":
+                shooter.rotate_right()
 
         # update and draw the projectiles
         projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies)
