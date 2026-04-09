@@ -1,6 +1,5 @@
 from enemy import Enemy
 
-
 class Game_manager:
     enemies = []  # list to store all enemy objects
     speed_x = 3  # speed of enemys in x direction
@@ -8,9 +7,10 @@ class Game_manager:
 
     drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
 
+    # 30/03/26: Luke Abrahamse: Added create enemies function
     def create_enemies(self):
-        rows = 3  # number of enemy rows
-        col = 5  # number of enemy coloums
+        rows = 3
+        col = 5 
         spacing = 60  # spacing between enemys
         x = 150  # starting x coordinate of top left enemy
         y = 480  # starting x coordinate of top left enemy
@@ -21,26 +21,30 @@ class Game_manager:
                 enemy.y = y - i * spacing
                 self.enemies.append(enemy)
 
+    # 30/03/26: Luke Abrahamse: Added refresh_enemies function to update the state of each enemy
+    # 02/04/26: Luke Abrahamse: Fixed enemy wall collision bug
     def refresh_enemies(self):  # incriments all enemys in x direction by current speed
         for i in range(len(self.enemies)):
             self.enemies[i].x += self.speed_x
 
         hit_wall = False
-        for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
-            if self.enemies[i].x + self.enemies[i].radius >= 600:
-                hit_wall = True
-            elif self.enemies[i].x - self.enemies[i].radius <= 0:
-                hit_wall = True
 
-        if (
-            hit_wall
-        ):  # if enemy has hit a wall reverse x direction and drop enemies down
+        for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
+            if (self.enemies[i].alive):
+                if self.enemies[i].x + self.enemies[i].radius >= 600:
+                    hit_wall = True
+                    break
+                elif self.enemies[i].x - self.enemies[i].radius <= 0:
+                    hit_wall = True
+                    break
+        if (hit_wall):  # if enemy has hit a wall reverse x direction and drop enemies down
             self.speed_x = -1 * self.speed_x
             self.drop_count += 1
             for i in range(len(self.enemies)):
                 self.enemies[i].y -= self.speed_y
 
-    def draw_enemies(self):  # draws every enemy in the enemies list
+    # 30/03/26: Luke Abrahamse: Added draw enemies function
+    def draw_enemies(self):
         for i in range(len(self.enemies)):
             self.enemies[i].draw()
 
