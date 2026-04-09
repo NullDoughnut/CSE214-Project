@@ -1,6 +1,7 @@
 import stdio
 import sys
 import stddraw
+from game_manager import Game_manager
 
 
 
@@ -13,6 +14,7 @@ class Score_Manager:
         stddraw.setPenColor(stddraw.WHITE)  #This creates a black background
         stddraw.setFontSize(40)
         stddraw.text(width/2, height / 2, "GAME OVER")  #Prints Game Over text
+        
 
         
     def draw_winner(self, width, height):
@@ -20,6 +22,11 @@ class Score_Manager:
         stddraw.setPenColor(stddraw.WHITE)  #This creates a black background
         stddraw.setFontSize(40)
         stddraw.text(width/2, height / 2, "YOU ARE A WINNER")  #Prints WINNER text
+    def score_tracking(self,current_score): #This is creates the score card at the top left of the screen
+        stddraw.setPenColor(stddraw.WHITE)
+        stddraw.setFontSize(20)
+        stddraw.text(60, 580, "Score: " +str(current_score)) 
+
 
         
 

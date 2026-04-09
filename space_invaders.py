@@ -80,6 +80,12 @@ def main() -> None:
     # Main game loop
     while True:
         stddraw.clear(stddraw.BLACK)
+         # 01/04/26:Denlan Molokwu: created a score tracker at the top
+
+        #Draw the score card 
+        current_score = manager.score_tracker() #pulls the score from the manager class and retrieves value of score from score_tracker function
+        
+
 
         if game_state == "winner":
             score_manager.draw_winner(WIDTH, HEIGHT)
@@ -124,6 +130,9 @@ def main() -> None:
             continue
 
         else:
+            score_manager.score_tracking(current_score)
+            
+
 
             # Input handling
             if stddraw.hasNextKeyTyped():
@@ -150,6 +159,7 @@ def main() -> None:
         manager.draw_enemies()
         shooter.draw()
 
+        
         if game_state == "playing":
             if manager.check_win():
                 game_state = "winner"
@@ -158,6 +168,7 @@ def main() -> None:
                 shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
             ):
                 game_state = "game_over"
+        
 
         stddraw.show(20)
 

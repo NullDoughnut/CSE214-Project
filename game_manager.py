@@ -49,7 +49,7 @@ class Game_manager:
     def check_gameover(
         self, shooter_y, shooter_x, shooter_radius, turrent_length, bottom_edge_y
     ):
-        # gets the absolute tip op the shooter
+        # gets the absolute tip of the shooter
         y_s = shooter_y + turrent_length
 
         # gets the left and right most points of the shooter
@@ -70,9 +70,20 @@ class Game_manager:
                     return True
         return False
 
+     
     def check_win(self):
 
         for enemy in self.enemies:
             if enemy.alive == True:
                 return False
         return True
+
+    # 01/04/26: Denlan Molokwu implemented a score tracker 
+
+
+    def score_tracker(self):
+        score = 0
+        for enemy in self.enemies:
+            if enemy.alive == False:
+                score += 100
+        return score
