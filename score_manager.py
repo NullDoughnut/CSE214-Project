@@ -2,34 +2,35 @@ import stdio
 import sys
 import stddraw
 from game_manager import Game_manager
+from picture import Picture as pic
 
-
+menu_img = pic("assets/menu_img.png")
 
 
 class Score_Manager:
 
-    def draw_game_over(self,width,height):
-    #creates the gameover screen
-        stddraw.clear(stddraw.BLACK)
-        stddraw.setPenColor(stddraw.WHITE)  #This creates a black background
+    def draw_game_over(self, width, height):
+        # creates the gameover screen
+        stddraw.clear()
+        stddraw.picture(menu_img, width / 2, height / 2, width, height)
+        stddraw.setPenColor(stddraw.WHITE)  # This creates a black background
         stddraw.setFontSize(40)
-        stddraw.text(width/2, height / 2, "GAME OVER")  #Prints Game Over text
-        
+        stddraw.text(width / 2, height / 2, "GAME OVER")  # Prints Game Over text
 
-        
     def draw_winner(self, width, height):
-        stddraw.clear(stddraw.BLACK)
-        stddraw.setPenColor(stddraw.WHITE)  #This creates a black background
+        stddraw.clear()
+        stddraw.picture(menu_img, width / 2, height / 2, width, height)
+        stddraw.setPenColor(stddraw.WHITE)  # This creates a black background
         stddraw.setFontSize(40)
-        stddraw.text(width/2, height / 2, "YOU ARE A WINNER")  #Prints WINNER text
-    def score_tracking(self,current_score): #This is creates the score card at the top left of the screen
+        stddraw.text(width / 2, height / 2, "YOU ARE A WINNER")  # Prints WINNER text
+
+    # 09/04/26: Dillan van Wyk: Fixed score positioning and added background box behind score
+    def score_tracking(self, current_score, height):
+        # Background box at top-left corner
+        stddraw.setPenColor(stddraw.BLACK)
+        stddraw.filledRectangle(0, height - 40, 140, 40)
+
+        # Score text
         stddraw.setPenColor(stddraw.WHITE)
-        stddraw.setFontSize(20)
-        stddraw.text(60, 580, "Score: " +str(current_score)) 
-
-
-        
-
-
-
- 
+        stddraw.setFontSize(18)
+        stddraw.text(70, height - 20, "Score: " + str(current_score))

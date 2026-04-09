@@ -1,5 +1,6 @@
 from enemy import Enemy
 
+
 class Game_manager:
     enemies = []  # list to store all enemy objects
     speed_x = 3  # speed of enemys in x direction
@@ -10,7 +11,7 @@ class Game_manager:
     # 30/03/26: Luke Abrahamse: Added create enemies function
     def create_enemies(self):
         rows = 3
-        col = 5 
+        col = 5
         spacing = 60  # spacing between enemys
         x = 150  # starting x coordinate of top left enemy
         y = 480  # starting x coordinate of top left enemy
@@ -30,14 +31,16 @@ class Game_manager:
         hit_wall = False
 
         for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
-            if (self.enemies[i].alive):
+            if self.enemies[i].alive:
                 if self.enemies[i].x + self.enemies[i].radius >= 600:
                     hit_wall = True
                     break
                 elif self.enemies[i].x - self.enemies[i].radius <= 0:
                     hit_wall = True
                     break
-        if (hit_wall):  # if enemy has hit a wall reverse x direction and drop enemies down
+        if (
+            hit_wall
+        ):  # if enemy has hit a wall reverse x direction and drop enemies down
             self.speed_x = -1 * self.speed_x
             self.drop_count += 1
             for i in range(len(self.enemies)):
@@ -74,7 +77,6 @@ class Game_manager:
                     return True
         return False
 
-     
     def check_win(self):
 
         for enemy in self.enemies:
@@ -82,8 +84,7 @@ class Game_manager:
                 return False
         return True
 
-    # 01/04/26: Denlan Molokwu implemented a score tracker 
-
+    # 01/04/26: Denlan Molokwu implemented a score tracker
 
     def score_tracker(self):
         score = 0

@@ -4,6 +4,8 @@ from game_manager import Game_manager
 from projectile import Projectile_Manager
 from score_manager import Score_Manager
 from audio_manager import Audio_Manager
+from picture import Picture as pic
+
 
 # Game world constants
 WIDTH = 600
@@ -16,11 +18,14 @@ TITLE_FONT = 35
 SUBTITLE_FONT = 25
 BODY_FONT = 18
 
+
 def main() -> None:
     # Canvas setup
     stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
     stddraw.setXscale(0, WIDTH)
     stddraw.setYscale(0, HEIGHT)
+    background_img = pic("assets/background_img.png")
+    menu_img = pic("assets/menu_img.png")
 
     # Shooter and enemies
     shooter = Shooter()
@@ -46,8 +51,10 @@ def main() -> None:
     rotate_state = None
 
     # 26/02/26: Dillan van Wyk: set up the title screen
+    # 09/04/26: Dillan van Wyk: changed background to an image
     while True:
-        stddraw.clear(stddraw.BLACK)
+        stddraw.clear()
+        stddraw.picture(menu_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
         stddraw.setPenColor(stddraw.WHITE)
 
         stddraw.setFontSize(TITLE_FONT)
@@ -83,12 +90,15 @@ def main() -> None:
     # Main game loop
     while True:
         stddraw.clear(stddraw.BLACK)
-         # 01/04/26:Denlan Molokwu: created a score tracker at the top
 
-        #Draw the score card 
-        current_score = manager.score_tracker() #pulls the score from the manager class and retrieves value of score from score_tracker function
-        
+        # 09/04/26: Dillan van Wyk: Changes background to image
+        stddraw.picture(background_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
 
+        # 01/04/26:Denlan Molokwu: created a score tracker at the top
+        # Draw the score card
+        current_score = (
+            manager.score_tracker()
+        )  # pulls the score from the manager class and retrieves value of score from score_tracker function
 
         if game_state == "winner":
             score_manager.draw_winner(WIDTH, HEIGHT)
@@ -133,18 +143,18 @@ def main() -> None:
             continue
 
         else:
-            score_manager.score_tracking(current_score)
-            
-    # 02/04/26: Luke Abrahamse: Added movement and rotation of shooter
+            score_manager.score_tracking(current_score, HEIGHT)
+
+            # 02/04/26: Luke Abrahamse: Added movement and rotation of shooter
             if stddraw.hasNextKeyTyped():
                 key = stddraw.nextKeyTyped()
-                if key == 'a':
+                if key == "a":
                     move_state = "left"
-                elif key == 'd':
+                elif key == "d":
                     move_state = "right"
-                elif key == 'q':
+                elif key == "q":
                     rotate_state = "left"
-                elif key == 'e':
+                elif key == "e":
                     rotate_state = "right"
                 elif key == "s":
                     move_state = None
@@ -172,7 +182,6 @@ def main() -> None:
         manager.draw_enemies()
         shooter.draw()
 
-        
         if game_state == "playing":
             if manager.check_win():
                 game_state = "winner"
@@ -181,7 +190,6 @@ def main() -> None:
                 shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
             ):
                 game_state = "game_over"
-        
 
         stddraw.show(20)
 

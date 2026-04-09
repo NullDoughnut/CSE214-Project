@@ -1,5 +1,9 @@
 import math, stddraw
 from projectile import Projectile
+from picture import Picture as pic
+
+shooter_img = pic("assets/shooter.png")
+
 
 # 30/03/26: Luke Abrahamse: Created Shooter Class. Added draw, move and rotate functions
 class Shooter:
@@ -8,23 +12,30 @@ class Shooter:
     speed = 10  # movement speed
     angle = 90  # starting angle
     rotate_speed = 5  # rotation speed
-    turret_length = 30
+    turret_length = 20
     radius = 15
 
-    def draw(self):  # draws shooters current position
-        stddraw.setPenColor(stddraw.WHITE)
-        stddraw.filledCircle(
-            self.x, self.y, self.radius
-        )  # draws shooter body at current coordinate
-        stddraw.setPenRadius(1)
+    # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
+    def draw(self):
+        # Draw shooter body
+        stddraw.picture(
+            shooter_img,
+            self.x,
+            self.y,
+            self.radius * 3.5,
+            self.radius * 3.5,
+        )
+
+        # Draw turret
+        stddraw.setPenColor(stddraw.YELLOW)
+        stddraw.setPenRadius(0.01)
         stddraw.line(
             self.x,
             self.y,
             self.x + self.turret_length * math.cos(math.radians(self.angle)),
             self.y + self.turret_length * math.sin(math.radians(self.angle)),
-        )  # draws shooter turret at curent angle
+        )
         stddraw.setPenRadius(0.0)
-        stddraw.setPenColor(stddraw.BLACK)
 
     def move_right(self):
         self.x += self.speed  # moves shooter to the right
