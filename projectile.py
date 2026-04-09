@@ -67,4 +67,4 @@ class Projectile_Manager:
         if self.cooldown == 0:
             self.projectiles.append(shooter.shoot())
             self.cooldown = self.max_cooldown
-            audio.play_tone(4400, 0.05)
+            audio.play_tone(4400, 0.1)
