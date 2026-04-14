@@ -43,11 +43,13 @@ class Projectile_Manager:
             self.cooldown -= 1
 
         # Projectile collisions with enemies
+        # 14/04/26: Dillan van Wyk: Added sound for when enemies die
         for p in self.projectiles[:]:
             for e in enemies:
                 if e.alive and collision(p, e):
                     e.alive = False
                     self.projectiles.remove(p)
+                    audio.play_tone(1000, 0.2)
                     break
 
         # Projectile off-screen removal and movement
