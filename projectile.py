@@ -14,13 +14,15 @@ def collision(projectile, enemy):
 
 
 # 31/03/26: Dillan van Wyk: Made the Projectile class and the move() and draw() functions
+# 18/04/26: Dillan van Wyk: Moved from class attributes to instance attributes
 class Projectile:
-    x = 0
-    y = 0
-    angle = 90
-    speed = 15
-    radius = 5
-    alive = True
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.angle = 90
+        self.speed = 15
+        self.radius = 5
+        self.alive = True
 
     def move(self):
         self.x += self.speed * math.cos(math.radians(self.angle))
@@ -33,10 +35,12 @@ class Projectile:
 
 
 # 31/03/26: Dillan van Wyk: Created the Project_Manager class to contain and manage functions related to projectiles [update(), draw(), shoot()]
+# 18/04/26: Dillan van Wyk: Moved from class attributes to instance attributes
 class Projectile_Manager:
-    projectiles = []
-    max_cooldown = 15
-    cooldown = 0
+    def __init__(self):
+        self.projectiles = []
+        self.max_cooldown = 15
+        self.cooldown = 0
 
     def update(self, x_min, x_max, y_min, y_max, enemies):
         if self.cooldown > 0:

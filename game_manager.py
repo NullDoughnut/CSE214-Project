@@ -3,12 +3,15 @@ from projectile import Projectile
 from enemy import Minions
 
 
+# 30/03/26: Luke Abrahamse: Created Game_manager
+# 18/04/26: Dillan van Wyk: Moved from class attributes to instance attributes
 class Game_manager:
-    enemies = []  # list to store all enemy objects
-    speed_x = 3  # speed of enemys in x direction
-    speed_y = 30  # speed of enemys in y direction
+    def __init__(self):
+        self.enemies = []  # list to store all enemy objects
+        self.speed_x = 3  # speed of enemys in x direction
+        self.speed_y = 30  # speed of enemys in y direction
 
-    drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
+        self.drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
 
     # 30/03/26: Luke Abrahamse: Added create enemies function
     def create_enemies(self):

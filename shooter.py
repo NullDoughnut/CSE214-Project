@@ -6,16 +6,17 @@ shooter_img = pic("assets/shooter.png")
 
 
 # 30/03/26: Luke Abrahamse: Created Shooter Class. Added draw, move and rotate functions
-# 18/04/26: Dillan van Wyk: Added shooter lives
+# 18/04/26: Dillan van Wyk: Added shooter lives. Also moved from class attributes to instance attributes
 class Shooter:
-    x = 300  # starting x coordinates
-    y = 30  # starting y coordinate
-    speed = 10  # movement speed
-    angle = 90  # starting angle
-    rotate_speed = 5  # rotation speed
-    turret_length = 20
-    radius = 15
-    lives = 3
+    def __init__(self):
+        self.x = 300  # starting x coordinates
+        self.y = 30  # starting y coordinate
+        self.speed = 10  # movement speed
+        self.angle = 90  # starting angle
+        self.rotate_speed = 5  # rotation speed
+        self.turret_length = 20
+        self.radius = 15
+        self.lives = 3
 
     # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
     def draw(self):
