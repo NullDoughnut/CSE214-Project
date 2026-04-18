@@ -86,7 +86,7 @@ def main() -> None:
                 quit()
             else:
                 break
-    #Creating what level tracker
+    # Creating what level tracker
 
     current_level = 1
     final_level = 2
@@ -147,6 +147,7 @@ def main() -> None:
 
         else:
             score_manager.score_tracking(current_score, HEIGHT)
+            score_manager.draw_lives(shooter.lives, WIDTH, HEIGHT)
 
             # 02/04/26: Luke Abrahamse: Added movement and rotation of shooter
             if stddraw.hasNextKeyTyped():
@@ -184,9 +185,9 @@ def main() -> None:
         manager.refresh_enemies()
         manager.draw_enemies()
         shooter.draw()
-    # 27/03/26:Denlan Molokwu: Created the gameover and winner screen 
+        # 27/03/26:Denlan Molokwu: Created the gameover and winner screen
 
-    #15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
+        # 15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
         if game_state == "playing":
             if manager.check_win():
 
@@ -194,22 +195,32 @@ def main() -> None:
                     current_level += 1
                     manager.enemies.clear()
                     manager.create_minions()
-                    
 
                     if current_level == final_level:
                         manager.create_boss()
-                        
-                        manager.create_minions()#created once reached final level a boss character spawns
+
+                        manager.create_minions()  # created once reached final level a boss character spawns
                     else:
                         manager.difficulty()
-                        manager.create_enemies()    #increase the difficulty each new level
+                        manager.create_enemies()  # increase the difficulty each new level
                     projectile_manager = Projectile_Manager()
                 else:
                     game_state = "winner"
 
-        elif manager.check_gameover(
+        result = manager.check_gameover(
             shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
-        ):
+        )
+
+        # 18/04/26: Dillan van Wyk: Added player lives logic
+        if result == "hit":
+            shooter.lives -= 1
+            shooter.x = 300  # reset position of shooter to starting position
+            shooter.angle = 90
+            manager.push_enemies()
+            if shooter.lives <= 0:
+                game_state = "game_over"
+
+        elif result == "bottom":
             game_state = "game_over"
 
         stddraw.show(20)

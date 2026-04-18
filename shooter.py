@@ -6,6 +6,7 @@ shooter_img = pic("assets/shooter.png")
 
 
 # 30/03/26: Luke Abrahamse: Created Shooter Class. Added draw, move and rotate functions
+# 18/04/26: Dillan van Wyk: Added shooter lives
 class Shooter:
     x = 300  # starting x coordinates
     y = 30  # starting y coordinate
@@ -14,6 +15,7 @@ class Shooter:
     rotate_speed = 5  # rotation speed
     turret_length = 20
     radius = 15
+    lives = 3
 
     # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
     def draw(self):
