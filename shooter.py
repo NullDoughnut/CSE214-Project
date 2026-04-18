@@ -7,6 +7,7 @@ shooter_img = pic("assets/shooter.png")
 
 # 30/03/26: Luke Abrahamse: Created Shooter Class. Added draw, move and rotate functions
 # 18/04/26: Dillan van Wyk: Added shooter lives. Also moved from class attributes to instance attributes
+# 18/04/26: Dillan van Wyk: Added colored circle at bottom of shooter in order to differentiate between players in co-op
 class Shooter:
     def __init__(self):
         self.x = 300  # starting x coordinates
@@ -17,9 +18,14 @@ class Shooter:
         self.turret_length = 20
         self.radius = 15
         self.lives = 3
+        self.color = stddraw.CYAN
 
     # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
     def draw(self):
+        # Draw colored circle at the bottom of the shooter
+        stddraw.setPenColor(self.color)
+        stddraw.filledCircle(self.x, self.y - self.radius, self.radius * 0.5)
+
         # Draw shooter body
         stddraw.picture(
             shooter_img,

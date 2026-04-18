@@ -66,22 +66,26 @@ def main() -> None:
 
         stddraw.setFontSize(BODY_FONT)
         stddraw.text(
-            WIDTH / 2, HEIGHT * 15 / 20, "P1: [A] move left, [S] stop, [D] move right"
+            WIDTH / 2,
+            HEIGHT * 15 / 20,
+            "P1: [A] move left, [S] stop movement, [D] move right",
         )
         stddraw.text(
             WIDTH / 2,
             HEIGHT * 14 / 20,
-            "P1: [Q] rotate left, [W] stop, [E] rotate right",
+            "P1: [Q] rotate left, [W] stop rotation, [E] rotate right",
         )
         stddraw.text(WIDTH / 2, HEIGHT * 13 / 20, "P1: [Space] to shoot")
 
         stddraw.text(
-            WIDTH / 2, HEIGHT * 11 / 20, "P2: [J] move left, [K] stop, [L] move right"
+            WIDTH / 2,
+            HEIGHT * 11 / 20,
+            "P2: [J] move left, [K] stop movement, [L] move right",
         )
         stddraw.text(
             WIDTH / 2,
             HEIGHT * 10 / 20,
-            "P2: [U] rotate left, [I] stop, [O] rotate right",
+            "P2: [U] rotate left, [I] stop rotation, [O] rotate right",
         )
         stddraw.text(WIDTH / 2, HEIGHT * 9 / 20, "P2: [N] to shoot")
 
@@ -113,6 +117,7 @@ def main() -> None:
     if multiplayer:
         shooter2 = Shooter()
         shooter2.x = 450
+        shooter2.color = stddraw.RED
         shooter.x = 150
         projectile_manager2 = Projectile_Manager()
         move_state2 = None
