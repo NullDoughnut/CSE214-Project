@@ -2,28 +2,11 @@ import stdio
 import sys
 import stddraw
 from game_manager import Game_manager
-from picture import Picture as pic
-
-menu_img = pic("assets/menu_img.png")
 
 
 class Score_Manager:
 
-    def draw_game_over(self, width, height):
-        # creates the gameover screen
-        stddraw.clear()
-        stddraw.picture(menu_img, width / 2, height / 2, width, height)
-        stddraw.setPenColor(stddraw.WHITE)  # This creates a black background
-        stddraw.setFontSize(40)
-        stddraw.text(width / 2, height / 2, "GAME OVER")  # Prints Game Over text
-
-    def draw_winner(self, width, height):
-        stddraw.clear()
-        stddraw.picture(menu_img, width / 2, height / 2, width, height)
-        stddraw.setPenColor(stddraw.WHITE)  # This creates a black background
-        stddraw.setFontSize(40)
-        stddraw.text(width / 2, height / 2, "YOU ARE A WINNER")  # Prints WINNER text
-
+    # 01/04/26: Denlan Molokwu: Created score tracking for when enemies are killed
     # 09/04/26: Dillan van Wyk: Fixed score positioning and added background box behind score
     def score_tracking(self, current_score, height):
         # Background box at top-left corner

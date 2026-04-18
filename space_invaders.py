@@ -5,18 +5,8 @@ from projectile import Projectile_Manager
 from score_manager import Score_Manager
 from audio_manager import Audio_Manager
 from picture import Picture as pic
-
-
-# Game world constants
-WIDTH = 600
-HEIGHT = 600
-
-CANVAS_SIZE = 500
-
-# Font sizes
-TITLE_FONT = 35
-SUBTITLE_FONT = 25
-BODY_FONT = 18
+from screen_manager import Screen_Manager
+from constants import WIDTH, HEIGHT, CANVAS_SIZE
 
 
 def main() -> None:
@@ -25,7 +15,6 @@ def main() -> None:
     stddraw.setXscale(0, WIDTH)
     stddraw.setYscale(0, HEIGHT)
     background_img = pic("assets/background_img.png")
-    menu_img = pic("assets/menu_img.png")
 
     # Shooter and enemies
     shooter = Shooter()
@@ -41,6 +30,10 @@ def main() -> None:
     # Audio
     audio_manager = Audio_Manager()
 
+    # Screens
+    screen_manager = Screen_Manager()
+    multiplayer = screen_manager.draw_title_screen()
+
     # Game state and timer
     # 01/04/26: Dillan van Wyk: created infinite game loop
     game_state = "playing"  # "playing", "game_over", "winner"
@@ -50,66 +43,7 @@ def main() -> None:
     move_state = None
     rotate_state = None
 
-    # 26/02/26: Dillan van Wyk: set up the title screen
-    # 09/04/26: Dillan van Wyk: changed background to an image
-    # 18/04/26: Dillan van Wyk: Added control instructions for player 2 and moved other text around
-    while True:
-        stddraw.clear()
-        stddraw.picture(menu_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-        stddraw.setPenColor(stddraw.WHITE)
-
-        stddraw.setFontSize(TITLE_FONT)
-        stddraw.text(WIDTH / 2, HEIGHT * 19 / 20, "SPACE INVADERS")
-
-        stddraw.setFontSize(SUBTITLE_FONT)
-        stddraw.text(WIDTH / 2, HEIGHT * 17 / 20, "Instructions:")
-
-        stddraw.setFontSize(BODY_FONT)
-        stddraw.text(
-            WIDTH / 2,
-            HEIGHT * 15 / 20,
-            "P1: [A] move left, [S] stop movement, [D] move right",
-        )
-        stddraw.text(
-            WIDTH / 2,
-            HEIGHT * 14 / 20,
-            "P1: [Q] rotate left, [W] stop rotation, [E] rotate right",
-        )
-        stddraw.text(WIDTH / 2, HEIGHT * 13 / 20, "P1: [Space] to shoot")
-
-        stddraw.text(
-            WIDTH / 2,
-            HEIGHT * 11 / 20,
-            "P2: [J] move left, [K] stop movement, [L] move right",
-        )
-        stddraw.text(
-            WIDTH / 2,
-            HEIGHT * 10 / 20,
-            "P2: [U] rotate left, [I] stop rotation, [O] rotate right",
-        )
-        stddraw.text(WIDTH / 2, HEIGHT * 9 / 20, "P2: [N] to shoot")
-
-        stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[H] for help")
-        stddraw.text(WIDTH / 2, HEIGHT * 6 / 20, "[X] to quit")
-
-        stddraw.setFontSize(SUBTITLE_FONT)
-        stddraw.text(WIDTH / 2, HEIGHT * 4 / 20, "[1] Single Player   [2] Co-op")
-
-        stddraw.show(20)
-
-        # 18/04/26: Dillan van Wyk: Checks if the player(s) want to play single or multiplayer
-        if stddraw.hasNextKeyTyped():
-            key = stddraw.nextKeyTyped()
-            if key == "x":
-                quit()
-            elif key == "1":
-                multiplayer = False
-                break
-            elif key == "2":
-                multiplayer = True
-                break
-    # Creating what level tracker
-
+    # Creating level tracker
     current_level = 1
     final_level = 2
 
@@ -137,7 +71,7 @@ def main() -> None:
         )  # pulls the score from the manager class and retrieves value of score from score_tracker function
 
         if game_state == "winner":
-            score_manager.draw_winner(WIDTH, HEIGHT)
+            screen_manager.draw_winner(WIDTH, HEIGHT)
             state_timer += 1
 
             if state_timer >= 100:
@@ -164,7 +98,7 @@ def main() -> None:
             continue
 
         elif game_state == "game_over":
-            score_manager.draw_game_over(WIDTH, HEIGHT)
+            screen_manager.draw_game_over(WIDTH, HEIGHT)
             state_timer += 1
 
             if state_timer >= 100:
@@ -216,6 +150,8 @@ def main() -> None:
                 elif key == " ":
                     if shooter.lives > 0:
                         projectile_manager.shoot(shooter)
+                elif key == "h":
+                    screen_manager.draw_help()
                 elif key == "x":
                     break
 
@@ -256,7 +192,7 @@ def main() -> None:
                 elif rotate_state2 == "right":
                     shooter2.rotate_right()
 
-        # update and draw the projectiles
+        # Update and draw the projectiles
         projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies)
         projectile_manager.draw()
 
@@ -276,7 +212,6 @@ def main() -> None:
             if shooter2.lives > 0:
                 shooter2.draw()
 
-        # 27/03/26:Denlan Molokwu: Created the gameover and winner screen
         # 15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
         if game_state == "playing":
             if manager.check_win():
