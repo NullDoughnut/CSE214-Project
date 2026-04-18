@@ -86,7 +86,10 @@ def main() -> None:
                 quit()
             else:
                 break
+    #Creating what level tracker
 
+    current_level = 1
+    final_level = 2
     # Main game loop
     while True:
         stddraw.clear(stddraw.BLACK)
@@ -181,15 +184,33 @@ def main() -> None:
         manager.refresh_enemies()
         manager.draw_enemies()
         shooter.draw()
+    # 27/03/26:Denlan Molokwu: Created the gameover and winner screen 
 
+    #15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
         if game_state == "playing":
             if manager.check_win():
-                game_state = "winner"
 
-            elif manager.check_gameover(
-                shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
-            ):
-                game_state = "game_over"
+                if current_level < final_level:
+                    current_level += 1
+                    manager.enemies.clear()
+                    manager.create_minions()
+                    
+
+                    if current_level == final_level:
+                        manager.create_boss()
+                        
+                        manager.create_minions()#created once reached final level a boss character spawns
+                    else:
+                        manager.difficulty()
+                        manager.create_enemies()    #increase the difficulty each new level
+                    projectile_manager = Projectile_Manager()
+                else:
+                    game_state = "winner"
+
+        elif manager.check_gameover(
+            shooter.y, shooter.x, shooter.radius, shooter.turret_length, 0
+        ):
+            game_state = "game_over"
 
         stddraw.show(20)
 

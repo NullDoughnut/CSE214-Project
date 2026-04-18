@@ -1,4 +1,6 @@
 from enemy import Enemy
+from projectile import Projectile
+from enemy import Minions
 
 
 class Game_manager:
@@ -21,17 +23,40 @@ class Game_manager:
                 enemy.x = x + j * spacing
                 enemy.y = y - i * spacing
                 self.enemies.append(enemy)
+     # 15/04/2026: Denlan Molokwu: Created new enemy types called the boss and the minions 
+    def create_boss(self):
+        boss = Enemy()
+
+        boss.x = 300
+        boss.y = 500
+
+        boss.radius = 45
+        boss.enemy_type = "boss"
+
+        self.enemies.append(boss)
+    def create_minions(self):
+
+        minions = Minions()
+
+        minions.x = 100
+        minions.y = 405
+        minions.radius = 15
+        minions.enemy_type = "minion"
+        self.enemies.append(minions)
 
     # 30/03/26: Luke Abrahamse: Added refresh_enemies function to update the state of each enemy
     # 02/04/26: Luke Abrahamse: Fixed enemy wall collision bug
     def refresh_enemies(self):  # incriments all enemys in x direction by current speed
+        
+
         for i in range(len(self.enemies)):
-            self.enemies[i].x += self.speed_x
+            if self.enemies[i].enemy_type != "boss":
+                self.enemies[i].x += self.speed_x
 
         hit_wall = False
 
         for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
-            if self.enemies[i].alive:
+            if self.enemies[i].alive and self.enemies[i].enemy_type != "boss":
                 if self.enemies[i].x + self.enemies[i].radius >= 600:
                     hit_wall = True
                     break
@@ -44,7 +69,9 @@ class Game_manager:
             self.speed_x = -1 * self.speed_x
             self.drop_count += 1
             for i in range(len(self.enemies)):
-                self.enemies[i].y -= self.speed_y
+                if self.enemies[i].enemy_type == "alien":
+                    self.enemies[i].y -= self.speed_y
+        
 
     # 30/03/26: Luke Abrahamse: Added draw enemies function
     def draw_enemies(self):
@@ -76,7 +103,7 @@ class Game_manager:
                     self.enemies.clear()
                     return True
         return False
-
+    #27/03/2026: Denlan Molokwu: Created a winning condition to see if the winner wins
     def check_win(self):
 
         for enemy in self.enemies:
@@ -92,3 +119,20 @@ class Game_manager:
             if enemy.alive == False:
                 score += 100
         return score
+
+    # 15/04/2026: Denlan Molokwu: created the function that increases the difficulty of each level
+    def difficulty(self):
+        self.speed_x = self.speed_x * 1.3
+        self.speed_y = self.speed_y + 4
+   # def boss_shooting(self):
+    #    if len(self.enemies) > 0:
+     #       p = Projectile()
+       #     boss = self.enemies[0]
+        # intializes the starting position and angle for the projectile
+        #    p.x = boss.x
+       #     p.y = boss.y - boss_radius
+        #    p.angle = 270
+       #     p.speed = 20
+
+     #   return p
+
