@@ -35,14 +35,15 @@ class Score_Manager:
         stddraw.setFontSize(18)
         stddraw.text(70, height - 20, "Score: " + str(current_score))
 
-    # 18/04/26: Dillan van Wyk: Created function to draw player lives at the top right of the window
-    def draw_lives(self, lives, width, height):
+    # 18/04/26: Dillan van Wyk: Created method to draw player lives at the top right of the window
+    # 18/04/26: Dillan van Wyk: Updated method to be compatible with two players
+    def draw_lives(self, lives, width, height, label="", x_offset=0):
         # Background box at top right of window is drawn
         stddraw.setPenColor(stddraw.BLACK)
-        stddraw.filledRectangle(width - 120, height - 40, 120, 40)
+        stddraw.filledRectangle(width - 120 - x_offset, height - 40, 120, 40)
 
         # Remaining hearts are drawn
         stddraw.setPenColor(stddraw.RED)
         stddraw.setFontSize(18)
         hearts = "♥ " * lives
-        stddraw.text(width - 60, height - 20, hearts)
+        stddraw.text(width - 60 - x_offset, height - 20, label + hearts)
