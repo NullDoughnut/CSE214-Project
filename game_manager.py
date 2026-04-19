@@ -147,14 +147,3 @@ class Game_manager:
         return projectiles
 
 
-# def boss_shooting(self):
-#    if len(self.enemies) > 0:
-#       p = Projectile()
-#     boss = self.enemies[0]
-# intializes the starting position and angle for the projectile
-#    p.x = boss.x
-#     p.y = boss.y - boss_radius
-#    p.angle = 270
-#     p.speed = 20
-
-#   return p

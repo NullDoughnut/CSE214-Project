@@ -1,7 +1,22 @@
 import stddraw
-import stdio
-import sys
+
+#19/04/2026 Denlan Molokwu: Created a bunker class that creates bunkers for the game
 
 class Bunker:
-    def draw_bunker(self):
-        stddraw.filledrectangle()
+    x = 0
+    y = 0
+    width = 60
+    height = 30
+    health = 5
+    alive = True
+    def draw(self):
+        if self.alive == True:
+            if self.health > 3:
+                stddraw.setPenColor(stddraw.GREEN)
+            elif self.health > 2:
+                stddraw.setPenColor(stddraw.YELLOW)
+            else:
+                stddraw.setPenColor(stddraw.RED)
+            stddraw.filledRectangle(self.x,self.y,self.width,self.height)
+
+

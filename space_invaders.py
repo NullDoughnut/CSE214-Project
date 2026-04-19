@@ -8,6 +8,7 @@ from picture import Picture as pic
 from screen_manager import Screen_Manager
 from powerup_manager import Powerup_Manager
 from constants import WIDTH, HEIGHT, CANVAS_SIZE
+from bunker import Bunker
 
 # Canvas setup
 stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
@@ -34,6 +35,12 @@ def reset_game(multiplayer):
         shooter2.color = stddraw.RED
         shooter.x = 150
         projectile_manager2 = Projectile_Manager()
+    bunkers = []
+    for i in range(3):
+        b = Bunker()
+        b.x = 100 + (i * 175)
+        b.y = 150
+        bunkers.append(b)
 
     return (
         shooter,
@@ -42,7 +49,8 @@ def reset_game(multiplayer):
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        "playing", 0, powerup_manager
+        "playing", 0, powerup_manager,
+        bunkers
     )
 
 
@@ -67,7 +75,7 @@ def main() -> None:
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        game_state, state_timer, powerup_manager
+        game_state, state_timer, powerup_manager,bunkers
     ) = reset_game(multiplayer)
     move_state = None
     move_state2 = None
@@ -109,7 +117,8 @@ def main() -> None:
                 enemy_projectile_manager,
                 game_state,
                 state_timer,
-                powerup_manager
+                powerup_manager,
+                bunkers
             ) = reset_game(multiplayer)
             continue
 
@@ -126,7 +135,8 @@ def main() -> None:
                 enemy_projectile_manager,
                 game_state,
                 state_timer,
-                powerup_manager
+                powerup_manager,
+                bunkers
             ) = reset_game(multiplayer)
             continue
 
@@ -159,7 +169,7 @@ def main() -> None:
                             enemy_projectile_manager,
                             game_state,
                             state_timer,
-                            powerup_timer
+                            powerup_timer,bunkers
                         ) = reset_game(multiplayer)
                         move_state = None
                         move_state2 = None
@@ -226,19 +236,19 @@ def main() -> None:
                     shooter2.rotate_right()
 
         # Update and draw the projectiles
-        projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies, powerup_manager)
+        projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies,bunkers, powerup_manager)
         projectile_manager.draw()
 
         # 18/04/26: Dillan van Wyk: Update and draw the projectiles for player 2
         if multiplayer:
-            projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies, powerup_manager)
+            projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies,bunkers, powerup_manager)
             projectile_manager2.draw()
 
         # 19/04/26: Dillan van Wyk: Enemy shooting
         for p in manager.enemy_shoot():
             enemy_projectile_manager.projectiles.append(p)
 
-        enemy_projectile_manager.update(0, WIDTH, 0, HEIGHT, [])
+        enemy_projectile_manager.update(0, WIDTH, 0, HEIGHT, [],bunkers)
         enemy_projectile_manager.draw(stddraw.YELLOW)
 
         # Checks for collisions between enemy projectiles and the player(s)
@@ -265,6 +275,8 @@ def main() -> None:
         if multiplayer:
             powerup_manager.update(shooter2, projectile_manager2)
         powerup_manager.draw()
+        for b in bunkers:
+            b.draw()   #draws bunkers
 
         # Draw enemies and shooter
         manager.refresh_enemies()
@@ -285,6 +297,7 @@ def main() -> None:
                     current_level += 1
                     manager.enemies.clear()
                     manager.create_minions()
+                    
 
                     if current_level == final_level:
                         manager.create_boss()
@@ -293,7 +306,15 @@ def main() -> None:
                     else:
                         manager.difficulty()
                         manager.create_enemies()  # increase the difficulty each new level
+
+                    bunkers = []
+                    for i in range(3):
+                        b = Bunker()
+                        b.x = 100 + (i*175)
+                        b.y = 150
+                        bunkers.append(b)
                     projectile_manager = Projectile_Manager()
+
                 else:
                     game_state = "winner"
 

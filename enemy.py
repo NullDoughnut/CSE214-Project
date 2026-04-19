@@ -2,6 +2,7 @@ import stddraw
 from picture import Picture as pic
 from projectile import Projectile
 
+
 enemy_img = pic("assets/alien.png")
 minions_img = pic("assets/spaceShips_002.png")
 
@@ -48,11 +49,14 @@ class Minions:
                 minions_img, self.x, self.y, self.radius * 3, self.radius * 3
             )
         stddraw.setPenColor(stddraw.BLACK)
-
+    # 19/04/26: Denlan: Implemented the fact minions can shoot back at increase speed each level
     def shoot(self):
         p = Projectile()
+        p.speed = 12
         p.x = self.x
         p.y = self.y - self.radius
         p.angle = 270
-        p.speed = 10
+        p.speed = p.speed * 1.3
         return p
+
+     
