@@ -47,8 +47,7 @@ class Screen_Manager:
             )
             stddraw.text(WIDTH / 2, HEIGHT * 9 / 20, "P2: [N] to shoot")
 
-            stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[H] for help")
-            stddraw.text(WIDTH / 2, HEIGHT * 6 / 20, "[X] to quit")
+            stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[X] to quit")
 
             stddraw.setFontSize(SUBTITLE_FONT)
             stddraw.text(WIDTH / 2, HEIGHT * 4 / 20, "[1] Single Player   [2] Co-op")
@@ -64,8 +63,6 @@ class Screen_Manager:
                     return False
                 elif key == "2":
                     return True
-                elif key == "h":
-                    self.draw_help()
 
     # 18/04/26: Dillan van Wyk: Created help screen that displays the controls for both players 1 and 2. Simply copied title screen instructions
     def draw_help(self):
@@ -102,7 +99,7 @@ class Screen_Manager:
             stddraw.text(WIDTH / 2, HEIGHT * 9 / 20, "P2: [N] to shoot")
 
             stddraw.setFontSize(SUBTITLE_FONT)
-            stddraw.text(WIDTH / 2, HEIGHT * 5 / 20, "Press any key to resume")
+            stddraw.text(WIDTH / 2, HEIGHT * 5 / 20, "Press any key to exit help")
 
             stddraw.show(20)
 
@@ -111,7 +108,6 @@ class Screen_Manager:
                 if key == "x":
                     quit()
                 else:
-                    stddraw.nextKeyTyped()
                     return None
 
     # 27/03/26: Denlan Molokwu: Created the gameover and winner screen
@@ -128,3 +124,58 @@ class Screen_Manager:
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.setFontSize(40)
         stddraw.text(width / 2, height / 2, "YOU ARE A WINNER")
+
+    # 19/04/26: Luke Abrahamse: Created the Pause Menu
+    def draw_pause_menu(self):
+        while True:
+            stddraw.clear()
+            stddraw.picture(menu_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+            stddraw.setPenColor(stddraw.WHITE)
+
+            stddraw.setFontSize(TITLE_FONT)
+            stddraw.text(WIDTH / 2, HEIGHT * 0.8, "PAUSED")
+
+            stddraw.setFontSize(SUBTITLE_FONT)
+            stddraw.text(WIDTH / 2,HEIGHT * 0.6,"[R] Resume")
+            stddraw.text(WIDTH / 2,HEIGHT * 0.5,"[T] Restart Game")
+            stddraw.text(WIDTH / 2,HEIGHT * 0.4,"[M] Main Menu")
+            stddraw.text(WIDTH / 2,HEIGHT * 0.3,"[H] Help")
+
+            stddraw.show(20)
+
+            if stddraw.hasNextKeyTyped():
+                key = stddraw.nextKeyTyped()
+                if key == "x":
+                    quit()
+                elif key == 'r':
+                    return "resume"
+                elif key == 't':
+                    if self.draw_confirm("Restart Game?"):
+                        return "restart"
+                elif key == 'm':
+                    if self.draw_confirm("Quit to Menu?"):
+                        return "menu"
+                elif key == 'h':
+                    self.draw_help()
+
+    # 19/04/26: Luke Abrahamse: Created the confirm screen
+    def draw_confirm(self, message):
+        while True:
+            stddraw.clear()
+            stddraw.picture(menu_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+            stddraw.setPenColor(stddraw.WHITE)
+
+            stddraw.setFontSize(TITLE_FONT)
+            stddraw.text(WIDTH / 2, HEIGHT / 2 + 30, message)
+            stddraw.text(WIDTH / 2, HEIGHT / 2 - 30, "Are you sure? [Y/N]")
+
+            stddraw.show(20)
+
+            if stddraw.hasNextKeyTyped():
+                key = stddraw.nextKeyTyped()
+                if key == "x":
+                    quit()
+                elif key == 'y':
+                    return True
+                elif key == 'n':
+                    return False
