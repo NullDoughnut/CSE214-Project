@@ -13,7 +13,8 @@ stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
 stddraw.setXscale(0, WIDTH)
 stddraw.setYscale(0, HEIGHT)
 
-# 19/04/26: Luke Abrahamse: Moved all game initialisation to one function 
+
+# 19/04/26: Luke Abrahamse: Moved all game initialisation to one function
 def reset_game(multiplayer):
     shooter = Shooter()
     shooter2 = None
@@ -30,7 +31,15 @@ def reset_game(multiplayer):
         shooter.x = 150
         projectile_manager2 = Projectile_Manager()
 
-    return shooter, manager, projectile_manager, shooter2, projectile_manager2, "playing", 0
+    return (
+        shooter,
+        manager,
+        projectile_manager,
+        shooter2,
+        projectile_manager2,
+        "playing",
+    )
+
 
 def main() -> None:
     background_img = pic("assets/background_img.png")
@@ -44,9 +53,11 @@ def main() -> None:
     # Screens
     screen_manager = Screen_Manager()
     multiplayer = screen_manager.draw_title_screen()
-    
+
     # Initialises all game attributes
-    shooter, manager, projectile_manager, shooter2, projectile_manager2, game_state, state_timer = reset_game(multiplayer)
+    shooter, manager, projectile_manager, shooter2, projectile_manager2, game_state = (
+        reset_game(multiplayer)
+    )
     move_state = None
     move_state2 = None
     rotate_state = None
@@ -57,8 +68,6 @@ def main() -> None:
     # Creating level tracker
     current_level = 1
     final_level = 2
-
-
 
     # Main game loop
     while True:
@@ -73,52 +82,33 @@ def main() -> None:
             manager.score_tracker()
         )  # pulls the score from the manager class and retrieves value of score from score_tracker function
 
+        # 19/04/26: Dillan van Wyk: Added game over and winner sounds
         if game_state == "winner":
             screen_manager.draw_winner(WIDTH, HEIGHT)
-            state_timer += 1
-
-            if state_timer >= 100:
-                # Resets game
-                shooter = Shooter()
-                manager = Game_manager()
-                manager.create_enemies()
-                projectile_manager = Projectile_Manager()
-
-                if multiplayer:
-                    shooter2 = Shooter()
-                    shooter2.x = 450
-                    shooter.x = 150
-                    projectile_manager2 = Projectile_Manager()
-
-                game_state = "playing"
-                state_timer = 0
-
-            if stddraw.hasNextKeyTyped():
-                if stddraw.nextKeyTyped() == "x":
-                    break
-
             stddraw.show(20)
+            audio_manager.play_song("assets/winner")
+            (
+                shooter,
+                manager,
+                projectile_manager,
+                shooter2,
+                projectile_manager2,
+                game_state,
+            ) = reset_game(multiplayer)
             continue
 
         elif game_state == "game_over":
             screen_manager.draw_game_over(WIDTH, HEIGHT)
-            state_timer += 1
-
-            if state_timer >= 100:
-                # Resets game
-                shooter = Shooter()
-                manager = Game_manager()
-                manager.create_enemies()
-                projectile_manager = Projectile_Manager()
-
-                game_state = "playing"
-                state_timer = 0
-
-            if stddraw.hasNextKeyTyped():
-                if stddraw.nextKeyTyped() == "x":
-                    break
-
             stddraw.show(20)
+            audio_manager.play_song("assets/gameover")
+            (
+                shooter,
+                manager,
+                projectile_manager,
+                shooter2,
+                projectile_manager2,
+                game_state,
+            ) = reset_game(multiplayer)
             continue
 
         else:
@@ -136,12 +126,19 @@ def main() -> None:
             # 18/04/26: Dillan van Wyk: Fixed bug were player 1's movement code prevented player 2's input from being read.
             if stddraw.hasNextKeyTyped():
                 key = stddraw.nextKeyTyped()
-                
+
                 # 19/04/26: Luke Abrahamse: Integrated the pause menu
                 if key == "p":
                     choice = screen_manager.draw_pause_menu()
                     if choice == "restart":
-                        (shooter, manager, projectile_manager, shooter2, projecctile_manager2, game_state, state_timer) = reset_game(multiplayer)
+                        (
+                            shooter,
+                            manager,
+                            projectile_manager,
+                            shooter2,
+                            projectile_manager2,
+                            game_state,
+                        ) = reset_game(multiplayer)
                         move_state = None
                         move_state2 = None
                         rotate_state = None
@@ -253,11 +250,13 @@ def main() -> None:
             )
 
             # 18/04/26: Dillan van Wyk: Added player lives logic
+            # 19/04/26: Dillan van Wyk: Added sound for when enemy touches player(s)
             if result == "hit":
                 shooter.lives -= 1
                 shooter.x = 300  # reset position of shooter to starting position
                 shooter.angle = 90
                 manager.push_enemies()
+                audio_manager.play_song("assets/hurt")
 
             elif result == "bottom":
                 game_state = "game_over"
@@ -275,6 +274,7 @@ def main() -> None:
                     shooter2.x = 450
                     shooter2.angle = 90
                     manager.push_enemies()
+                    audio_manager.play_song("assets/hurt")
                 elif result2 == "bottom":
                     game_state = "game_over"
 
@@ -287,6 +287,7 @@ def main() -> None:
                 game_state = "game_over"
 
         stddraw.show(20)
+
 
 if __name__ == "__main__":
     main()
