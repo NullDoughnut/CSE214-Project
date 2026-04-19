@@ -8,21 +8,32 @@ from picture import Picture as pic
 from screen_manager import Screen_Manager
 from constants import WIDTH, HEIGHT, CANVAS_SIZE
 
+# Canvas setup
+stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
+stddraw.setXscale(0, WIDTH)
+stddraw.setYscale(0, HEIGHT)
 
-def main() -> None:
-    # Canvas setup
-    stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
-    stddraw.setXscale(0, WIDTH)
-    stddraw.setYscale(0, HEIGHT)
-    background_img = pic("assets/background_img.png")
-
-    # Shooter and enemies
+# 19/04/26: Luke Abrahamse: Moved all game initialisation to one function 
+def reset_game(multiplayer):
     shooter = Shooter()
+    shooter2 = None
     manager = Game_manager()
     manager.create_enemies()
-
-    # Projectiles
     projectile_manager = Projectile_Manager()
+    projectile_manager2 = None
+
+    # 18/04/26: Dillan van Wyk: Spawns player 1 on the left of the screen and player 2 on the right of the screen, if playing co-op
+    if multiplayer:
+        shooter2 = Shooter()
+        shooter2.x = 450
+        shooter2.color = stddraw.RED
+        shooter.x = 150
+        projectile_manager2 = Projectile_Manager()
+
+    return shooter, manager, projectile_manager, shooter2, projectile_manager2, "playing", 0
+
+def main() -> None:
+    background_img = pic("assets/background_img.png")
 
     # Scores
     score_manager = Score_Manager()
@@ -33,29 +44,21 @@ def main() -> None:
     # Screens
     screen_manager = Screen_Manager()
     multiplayer = screen_manager.draw_title_screen()
-
-    # Game state and timer
-    # 01/04/26: Dillan van Wyk: created infinite game loop
-    game_state = "playing"  # "playing", "game_over", "winner"
-    state_timer = 0
-
-    # Movement states
+    
+    # Initialises all game attributes
+    shooter, manager, projectile_manager, shooter2, projectile_manager2, game_state, state_timer = reset_game(multiplayer)
     move_state = None
+    move_state2 = None
     rotate_state = None
+    rotate_state2 = None
+
+    # 01/04/26: Dillan van Wyk: created infinite game loop
 
     # Creating level tracker
     current_level = 1
     final_level = 2
 
-    # 18/04/26: Dillan van Wyk: Spawns player 1 on the left of the screen and player 2 on the right of the screen, if playing co-op
-    if multiplayer:
-        shooter2 = Shooter()
-        shooter2.x = 450
-        shooter2.color = stddraw.RED
-        shooter.x = 150
-        projectile_manager2 = Projectile_Manager()
-        move_state2 = None
-        rotate_state2 = None
+
 
     # Main game loop
     while True:
@@ -133,6 +136,19 @@ def main() -> None:
             # 18/04/26: Dillan van Wyk: Fixed bug were player 1's movement code prevented player 2's input from being read.
             if stddraw.hasNextKeyTyped():
                 key = stddraw.nextKeyTyped()
+                
+                # 19/04/26: Luke Abrahamse: Integrated the pause menu
+                if key == "p":
+                    choice = screen_manager.draw_pause_menu()
+                    if choice == "restart":
+                        (shooter, manager, projectile_manager, shooter2, projecctile_manager2, game_state, state_timer) = reset_game(multiplayer)
+                        move_state = None
+                        move_state2 = None
+                        rotate_state = None
+                        rotate_state2 = None
+                    elif choice == "menu":
+                        main()
+                        return
 
                 # Player 1 controls
                 if key == "a":
@@ -150,8 +166,6 @@ def main() -> None:
                 elif key == " ":
                     if shooter.lives > 0:
                         projectile_manager.shoot(shooter)
-                elif key == "h":
-                    screen_manager.draw_help()
                 elif key == "x":
                     break
 
@@ -273,7 +287,6 @@ def main() -> None:
                 game_state = "game_over"
 
         stddraw.show(20)
-
 
 if __name__ == "__main__":
     main()
