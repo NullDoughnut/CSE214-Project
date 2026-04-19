@@ -43,7 +43,7 @@ class Projectile_Manager:
         self.max_cooldown = 15
         self.cooldown = 0
 
-    def update(self, x_min, x_max, y_min, y_max, enemies):
+    def update(self, x_min, x_max, y_min, y_max, enemies, powerup_manager = None):
         if self.cooldown > 0:
             self.cooldown -= 1
 
@@ -52,6 +52,8 @@ class Projectile_Manager:
             for e in enemies:
                 if e.alive and collision(p, e):
                     e.alive = False
+                    if powerup_manager:
+                        powerup_manager.spawn_powerup(e.x, e.y)
                     self.projectiles.remove(p)
                     break
 
@@ -68,8 +70,17 @@ class Projectile_Manager:
             p.draw(color)
 
     # Allows shooter to shoot projectiles
-    def shoot(self, shooter):
+    def shoot(self, shooter, powerup_manager=None):
         if self.cooldown == 0:
             self.projectiles.append(shooter.shoot())
+
+            if powerup_manager and powerup_manager.multi_shot_timer > 0:
+                lp = shooter.shoot()
+                lp.angle += 20
+                rp = shooter.shoot()
+                rp.angle -= 20
+                self.projectiles.append(lp)
+                self.projectiles.append(rp)
+
             self.cooldown = self.max_cooldown
             audio.play_tone(4400, 0.1)

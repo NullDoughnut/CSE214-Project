@@ -6,6 +6,7 @@ from score_manager import Score_Manager
 from audio_manager import Audio_Manager
 from picture import Picture as pic
 from screen_manager import Screen_Manager
+from powerup_manager import Powerup_Manager
 from constants import WIDTH, HEIGHT, CANVAS_SIZE
 
 # Canvas setup
@@ -24,6 +25,7 @@ def reset_game(multiplayer):
     projectile_manager = Projectile_Manager()
     projectile_manager2 = None
     enemy_projectile_manager = Projectile_Manager()
+    powerup_manager = Powerup_Manager()
 
     # 18/04/26: Dillan van Wyk: Spawns player 1 on the left of the screen and player 2 on the right of the screen, if playing co-op
     if multiplayer:
@@ -40,7 +42,7 @@ def reset_game(multiplayer):
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        "playing",
+        "playing", 0, powerup_manager
     )
 
 
@@ -65,7 +67,7 @@ def main() -> None:
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        game_state,
+        game_state, state_timer, powerup_manager
     ) = reset_game(multiplayer)
     move_state = None
     move_state2 = None
@@ -73,7 +75,7 @@ def main() -> None:
     rotate_state2 = None
 
     # Enemy Projectiles
-    enemy_projectile_manager = Projectile_Manager()
+    # enemy_projectile_manager = Projectile_Manager()
 
     # Creating level tracker
     current_level = 1
@@ -106,6 +108,8 @@ def main() -> None:
                 projectile_manager2,
                 enemy_projectile_manager,
                 game_state,
+                state_timer,
+                powerup_manager
             ) = reset_game(multiplayer)
             continue
 
@@ -121,6 +125,8 @@ def main() -> None:
                 projectile_manager2,
                 enemy_projectile_manager,
                 game_state,
+                state_timer,
+                powerup_manager
             ) = reset_game(multiplayer)
             continue
 
@@ -152,6 +158,8 @@ def main() -> None:
                             projectile_manager2,
                             enemy_projectile_manager,
                             game_state,
+                            state_timer,
+                            powerup_timer
                         ) = reset_game(multiplayer)
                         move_state = None
                         move_state2 = None
@@ -176,7 +184,7 @@ def main() -> None:
                     rotate_state = None
                 elif key == " ":
                     if shooter.lives > 0:
-                        projectile_manager.shoot(shooter)
+                        projectile_manager.shoot(shooter, powerup_manager)
                 elif key == "x":
                     break
 
@@ -218,12 +226,12 @@ def main() -> None:
                     shooter2.rotate_right()
 
         # Update and draw the projectiles
-        projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies)
+        projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies, powerup_manager)
         projectile_manager.draw()
 
         # 18/04/26: Dillan van Wyk: Update and draw the projectiles for player 2
         if multiplayer:
-            projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies)
+            projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies, powerup_manager)
             projectile_manager2.draw()
 
         # 19/04/26: Dillan van Wyk: Enemy shooting
@@ -251,6 +259,12 @@ def main() -> None:
                     manager.push_enemies()
                     audio_manager.play_song("assets/hurt")
                     enemy_projectile_manager.projectiles.remove(p)
+
+        # 19/04/26: Luke Abrahamse: added powerup updates and draw
+        powerup_manager.update(shooter, projectile_manager)
+        if multiplayer:
+            powerup_manager.update(shooter2, projectile_manager2)
+        powerup_manager.draw()
 
         # Draw enemies and shooter
         manager.refresh_enemies()

@@ -48,3 +48,11 @@ class Minions:
                 minions_img, self.x, self.y, self.radius * 3, self.radius * 3
             )
         stddraw.setPenColor(stddraw.BLACK)
+
+    def shoot(self):
+        p = Projectile()
+        p.x = self.x
+        p.y = self.y - self.radius
+        p.angle = 270
+        p.speed = 10
+        return p
