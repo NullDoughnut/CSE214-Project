@@ -264,6 +264,7 @@ def main() -> None:
         # 18/04/26: Dillan van Wyk: Handles game over logic for both players
         if multiplayer:
             # 18/04/26: Dillan van Wyk: Fixed bug were enemies were interacting with dead player by only checking gameover if the shooter has lives
+            # 19/04/26: Dillan van Wyk: Added player damage audios
             if shooter2.lives > 0:
                 result2 = manager.check_gameover(
                     shooter2.y, shooter2.x, shooter2.radius, shooter2.turret_length, 0
