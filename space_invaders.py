@@ -1,7 +1,7 @@
 import stdio, stddraw
 from shooter import Shooter
 from game_manager import Game_manager
-from projectile import Projectile_Manager
+from projectile import Projectile_Manager, collision
 from score_manager import Score_Manager
 from audio_manager import Audio_Manager
 from picture import Picture as pic
@@ -15,6 +15,7 @@ stddraw.setYscale(0, HEIGHT)
 
 
 # 19/04/26: Luke Abrahamse: Moved all game initialisation to one function
+# 19/04/26: Dillan van Wyk: Updated reset_game() to also reset enemy projectiles
 def reset_game(multiplayer):
     shooter = Shooter()
     shooter2 = None
@@ -22,6 +23,7 @@ def reset_game(multiplayer):
     manager.create_enemies()
     projectile_manager = Projectile_Manager()
     projectile_manager2 = None
+    enemy_projectile_manager = Projectile_Manager()
 
     # 18/04/26: Dillan van Wyk: Spawns player 1 on the left of the screen and player 2 on the right of the screen, if playing co-op
     if multiplayer:
@@ -37,6 +39,7 @@ def reset_game(multiplayer):
         projectile_manager,
         shooter2,
         projectile_manager2,
+        enemy_projectile_manager,
         "playing",
     )
 
@@ -55,20 +58,28 @@ def main() -> None:
     multiplayer = screen_manager.draw_title_screen()
 
     # Initialises all game attributes
-    shooter, manager, projectile_manager, shooter2, projectile_manager2, game_state = (
-        reset_game(multiplayer)
-    )
+    (
+        shooter,
+        manager,
+        projectile_manager,
+        shooter2,
+        projectile_manager2,
+        enemy_projectile_manager,
+        game_state,
+    ) = reset_game(multiplayer)
     move_state = None
     move_state2 = None
     rotate_state = None
     rotate_state2 = None
 
-    # 01/04/26: Dillan van Wyk: created infinite game loop
+    # Enemy Projectiles
+    enemy_projectile_manager = Projectile_Manager()
 
     # Creating level tracker
     current_level = 1
     final_level = 2
 
+    # 01/04/26: Dillan van Wyk: created infinite game loop
     # Main game loop
     while True:
         stddraw.clear(stddraw.BLACK)
@@ -93,6 +104,7 @@ def main() -> None:
                 projectile_manager,
                 shooter2,
                 projectile_manager2,
+                enemy_projectile_manager,
                 game_state,
             ) = reset_game(multiplayer)
             continue
@@ -107,6 +119,7 @@ def main() -> None:
                 projectile_manager,
                 shooter2,
                 projectile_manager2,
+                enemy_projectile_manager,
                 game_state,
             ) = reset_game(multiplayer)
             continue
@@ -137,6 +150,7 @@ def main() -> None:
                             projectile_manager,
                             shooter2,
                             projectile_manager2,
+                            enemy_projectile_manager,
                             game_state,
                         ) = reset_game(multiplayer)
                         move_state = None
@@ -211,6 +225,32 @@ def main() -> None:
         if multiplayer:
             projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies)
             projectile_manager2.draw()
+
+        # 19/04/26: Dillan van Wyk: Enemy shooting
+        for p in manager.enemy_shoot():
+            enemy_projectile_manager.projectiles.append(p)
+
+        enemy_projectile_manager.update(0, WIDTH, 0, HEIGHT, [])
+        enemy_projectile_manager.draw(stddraw.YELLOW)
+
+        # Checks for collisions between enemy projectiles and the player(s)
+        for p in enemy_projectile_manager.projectiles[:]:
+            if collision(p, shooter) and shooter.lives > 0:
+                shooter.lives -= 1
+                shooter.x = 300
+                shooter.angle = 90
+                manager.push_enemies()
+                audio_manager.play_song("assets/hurt")
+                enemy_projectile_manager.projectiles.remove(p)
+
+            if multiplayer:
+                if collision(p, shooter2) and shooter2.lives > 0:
+                    shooter2.lives -= 1
+                    shooter2.x = 450
+                    shooter2.angle = 90
+                    manager.push_enemies()
+                    audio_manager.play_song("assets/hurt")
+                    enemy_projectile_manager.projectiles.remove(p)
 
         # Draw enemies and shooter
         manager.refresh_enemies()

@@ -28,8 +28,9 @@ class Projectile:
         self.x += self.speed * math.cos(math.radians(self.angle))
         self.y += self.speed * math.sin(math.radians(self.angle))
 
-    def draw(self):
-        stddraw.setPenColor(stddraw.WHITE)
+    # 19/04/26: Dillan van Wyk: Added color to parameters so that the color of the projectiles can be changed
+    def draw(self, color=stddraw.WHITE):
+        stddraw.setPenColor(color)
         if self.alive:
             stddraw.filledCircle(self.x, self.y, self.radius)
 
@@ -62,9 +63,9 @@ class Projectile_Manager:
                 p.move()
 
     # Draw projectiles
-    def draw(self):
+    def draw(self, color=stddraw.WHITE):
         for p in self.projectiles:
-            p.draw()
+            p.draw(color)
 
     # Allows shooter to shoot projectiles
     def shoot(self, shooter):

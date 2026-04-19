@@ -1,6 +1,7 @@
 from enemy import Enemy
 from projectile import Projectile
 from enemy import Minions
+import random
 
 
 # 30/03/26: Luke Abrahamse: Created Game_manager
@@ -134,6 +135,16 @@ class Game_manager:
     def push_enemies(self):
         for enemy in self.enemies:
             enemy.y += 60
+
+    # 19/04/26: Dillan van Wyk: Created method that allows an enemy to shoot a projectile with probability 0.002
+    def enemy_shoot(self, shoot_chance=0.002):
+        projectiles = []
+
+        for enemy in self.enemies:
+            if enemy.alive and random.random() < shoot_chance:
+                projectiles.append(enemy.shoot())
+
+        return projectiles
 
 
 # def boss_shooting(self):
