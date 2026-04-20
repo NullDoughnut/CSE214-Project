@@ -4,19 +4,33 @@ import stddraw
 from game_manager import Game_manager
 
 
+# 20/04/26: Dillan van Wyk: Reworked the way scores are calculated and added functionality to track session high score. Added register_points and reset methods
+#                           and reworked score_tracking into draw_score
 class Score_Manager:
+    def __init__(self):
+        self.current_score = 0
+        self.high_score = 0
 
-    # 01/04/26: Denlan Molokwu: Created score tracking for when enemies are killed
-    # 09/04/26: Dillan van Wyk: Fixed score positioning and added background box behind score
-    def score_tracking(self, current_score, height):
+    def register_points(self, points):
+        self.current_score += points
+        if self.current_score > self.high_score:
+            self.high_score = self.current_score
+
+    def reset(self):
+        self.current_score = 0
+
+    def draw_score(self, width, height):
         # Background box at top-left corner
         stddraw.setPenColor(stddraw.BLACK)
-        stddraw.filledRectangle(0, height - 40, 140, 40)
+        stddraw.filledRectangle(0, height - 40, 280, 40)
 
         # Player's current score is drawn
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.setFontSize(18)
-        stddraw.text(70, height - 20, "Score: " + str(current_score))
+        stddraw.text(70, height - 20, "Score: " + str(self.current_score))
+
+        # Session's high score is drawn next to player's current score
+        stddraw.text(200, height - 20, "High: " + str(self.high_score))
 
     # 18/04/26: Dillan van Wyk: Created method to draw player lives at the top right of the window
     # 18/04/26: Dillan van Wyk: Updated method to be compatible with two players

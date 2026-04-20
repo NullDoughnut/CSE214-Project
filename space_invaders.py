@@ -15,6 +15,9 @@ stddraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE)
 stddraw.setXscale(0, WIDTH)
 stddraw.setYscale(0, HEIGHT)
 
+# Scores
+score_manager = Score_Manager()
+
 
 # 19/04/26: Luke Abrahamse: Moved all game initialisation to one function
 # 19/04/26: Dillan van Wyk: Updated reset_game() to also reset enemy projectiles
@@ -49,16 +52,17 @@ def reset_game(multiplayer):
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        "playing", 0, powerup_manager,
-        bunkers
+        "playing",
+        0,
+        powerup_manager,
+        bunkers,
     )
 
 
 def main() -> None:
     background_img = pic("assets/background_img.png")
 
-    # Scores
-    score_manager = Score_Manager()
+    global score_manager
 
     # Audio
     audio_manager = Audio_Manager()
@@ -75,7 +79,10 @@ def main() -> None:
         shooter2,
         projectile_manager2,
         enemy_projectile_manager,
-        game_state, state_timer, powerup_manager,bunkers
+        game_state,
+        state_timer,
+        powerup_manager,
+        bunkers,
     ) = reset_game(multiplayer)
     move_state = None
     move_state2 = None
@@ -97,17 +104,12 @@ def main() -> None:
         # 09/04/26: Dillan van Wyk: Changes background to image
         stddraw.picture(background_img, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
 
-        # 01/04/26:Denlan Molokwu: created a score tracker at the top
-        # Draw the score card
-        current_score = (
-            manager.score_tracker()
-        )  # pulls the score from the manager class and retrieves value of score from score_tracker function
-
         # 19/04/26: Dillan van Wyk: Added game over and winner sounds
         if game_state == "winner":
             screen_manager.draw_winner(WIDTH, HEIGHT)
             stddraw.show(20)
             audio_manager.play_song("assets/winner")
+            score_manager.reset()
             (
                 shooter,
                 manager,
@@ -118,7 +120,7 @@ def main() -> None:
                 game_state,
                 state_timer,
                 powerup_manager,
-                bunkers
+                bunkers,
             ) = reset_game(multiplayer)
             continue
 
@@ -126,6 +128,7 @@ def main() -> None:
             screen_manager.draw_game_over(WIDTH, HEIGHT)
             stddraw.show(20)
             audio_manager.play_song("assets/gameover")
+            score_manager.reset()
             (
                 shooter,
                 manager,
@@ -136,12 +139,12 @@ def main() -> None:
                 game_state,
                 state_timer,
                 powerup_manager,
-                bunkers
+                bunkers,
             ) = reset_game(multiplayer)
             continue
 
         else:
-            score_manager.score_tracking(current_score, HEIGHT)
+            score_manager.draw_score(WIDTH, HEIGHT)
 
             # 18/04/26: Dillan van Wyk: Draw both players' lives at the top right of the screen if co-op is selected
             if multiplayer:
@@ -169,7 +172,8 @@ def main() -> None:
                             enemy_projectile_manager,
                             game_state,
                             state_timer,
-                            powerup_timer,bunkers
+                            powerup_timer,
+                            bunkers,
                         ) = reset_game(multiplayer)
                         move_state = None
                         move_state2 = None
@@ -236,28 +240,46 @@ def main() -> None:
                     shooter2.rotate_right()
 
         # Update and draw the projectiles
-        projectile_manager.update(0, WIDTH, 0, HEIGHT, manager.enemies,bunkers, powerup_manager)
+        projectile_manager.update(
+            0,
+            WIDTH,
+            0,
+            HEIGHT,
+            manager.enemies,
+            bunkers,
+            score_manager,
+            powerup_manager,
+        )
         projectile_manager.draw()
 
         # 18/04/26: Dillan van Wyk: Update and draw the projectiles for player 2
         if multiplayer:
-            projectile_manager2.update(0, WIDTH, 0, HEIGHT, manager.enemies,bunkers, powerup_manager)
+            projectile_manager2.update(
+                0,
+                WIDTH,
+                0,
+                HEIGHT,
+                manager.enemies,
+                bunkers,
+                score_manager,
+                powerup_manager,
+            )
             projectile_manager2.draw()
 
         # 19/04/26: Dillan van Wyk: Enemy shooting
         for p in manager.enemy_shoot():
             enemy_projectile_manager.projectiles.append(p)
 
-        enemy_projectile_manager.update(0, WIDTH, 0, HEIGHT, [],bunkers)
+        enemy_projectile_manager.update(0, WIDTH, 0, HEIGHT, [], bunkers, score_manager)
         enemy_projectile_manager.draw(stddraw.YELLOW)
 
         # Checks for collisions between enemy projectiles and the player(s)
+        # 20/04/26: Dillan van Wyk: Fixed bug were enemies are pushed back when shooter gets hit by enemy projectile
         for p in enemy_projectile_manager.projectiles[:]:
             if collision(p, shooter) and shooter.lives > 0:
                 shooter.lives -= 1
                 shooter.x = 300
                 shooter.angle = 90
-                manager.push_enemies()
                 audio_manager.play_song("assets/hurt")
                 enemy_projectile_manager.projectiles.remove(p)
 
@@ -266,7 +288,6 @@ def main() -> None:
                     shooter2.lives -= 1
                     shooter2.x = 450
                     shooter2.angle = 90
-                    manager.push_enemies()
                     audio_manager.play_song("assets/hurt")
                     enemy_projectile_manager.projectiles.remove(p)
 
@@ -275,8 +296,9 @@ def main() -> None:
         if multiplayer:
             powerup_manager.update(shooter2, projectile_manager2)
         powerup_manager.draw()
+
         for b in bunkers:
-            b.draw()   #draws bunkers
+            b.draw()  # draws bunkers
 
         # Draw enemies and shooter
         manager.refresh_enemies()
@@ -297,7 +319,6 @@ def main() -> None:
                     current_level += 1
                     manager.enemies.clear()
                     manager.create_minions()
-                    
 
                     if current_level == final_level:
                         manager.create_boss()
@@ -310,7 +331,7 @@ def main() -> None:
                     bunkers = []
                     for i in range(3):
                         b = Bunker()
-                        b.x = 100 + (i*175)
+                        b.x = 100 + (i * 175)
                         b.y = 150
                         bunkers.append(b)
                     projectile_manager = Projectile_Manager()
