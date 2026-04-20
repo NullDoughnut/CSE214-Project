@@ -109,7 +109,6 @@ def main() -> None:
             screen_manager.draw_winner(WIDTH, HEIGHT)
             stddraw.show(20)
             audio_manager.play_song("assets/winner")
-            score_manager.reset()
             (
                 shooter,
                 manager,
