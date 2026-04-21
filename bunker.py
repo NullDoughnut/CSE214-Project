@@ -1,6 +1,9 @@
 import stddraw
+from picture import Picture as pic
 
 #19/04/2026 Denlan Molokwu: Created a bunker class that creates bunkers for the game
+
+bunker_img = pic("assets/Bunker.png")
 
 class Bunker:
     x = 0

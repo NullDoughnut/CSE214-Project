@@ -9,7 +9,8 @@ import random
 class Game_manager:
     def __init__(self):
         self.enemies = []  # list to store all enemy objects
-        self.speed_x = 3  # speed of enemys in x direction
+        self.speed_x = 3   # speed of enemy in x direction
+        self.minion_speed_x = 5 # speed of minion in x direction
         self.speed_y = 30  # speed of enemys in y direction
 
         self.drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
@@ -20,12 +21,13 @@ class Game_manager:
         col = 5
         spacing = 60  # spacing between enemys
         x = 150  # starting x coordinate of top left enemy
-        y = 480  # starting x coordinate of top left enemy
+        y = 390  # starting x coordinate of top left enemy
         for i in range(rows):  # nested loop initialises all enemies in 2D list
             for j in range(col):
                 enemy = Enemy()
                 enemy.x = x + j * spacing
                 enemy.y = y - i * spacing
+                enemy.enemy_type = "alien"  #ensures every alien has a type
                 self.enemies.append(enemy)
 
     # 15/04/2026: Denlan Molokwu: Created new enemy types called the boss and the minions
@@ -33,49 +35,70 @@ class Game_manager:
         boss = Enemy()
 
         boss.x = 300
-        boss.y = 500
+        boss.y = 530
 
-        boss.radius = 45
+        boss.radius = 35
         boss.enemy_type = "boss"
 
         self.enemies.append(boss)
 
-    def create_minions(self):
+    def create_minions(self,level):
+        num_minions = level + 1  #logic to spawn more minions each level
+        spacing = 60
+        for i in range(num_minions):
+            minions = Minions()
 
-        minions = Minions()
-
-        minions.x = 100
-        minions.y = 405
-        minions.radius = 15
-        minions.enemy_type = "minion"
-        self.enemies.append(minions)
+            minions.x = 100 + (i * spacing)
+            minions.y = 450
+            minions.radius = 15
+            minions.enemy_type = "minion"
+            self.enemies.append(minions)
 
     # 30/03/26: Luke Abrahamse: Added refresh_enemies function to update the state of each enemy
     # 02/04/26: Luke Abrahamse: Fixed enemy wall collision bug
+    #21/04/2026: Denlan Molokwu: Fixed the way collisions affected bumping against the wall so minion and enemies behaved differently
     def refresh_enemies(self):  # incriments all enemys in x direction by current speed
 
         for i in range(len(self.enemies)):
-            if self.enemies[i].enemy_type != "boss":
+            if self.enemies[i].enemy_type == "alien":
                 self.enemies[i].x += self.speed_x
+            elif self.enemies[i].enemy_type == "minion":
+                self.enemies[i].x += self.minion_speed_x
 
-        hit_wall = False
+        alien_hit_wall = False
+        minion_hit_wall = False
 
         for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
-            if self.enemies[i].alive and self.enemies[i].enemy_type != "boss":
-                if self.enemies[i].x + self.enemies[i].radius >= 600:
-                    hit_wall = True
+            if self.enemies[i].alive and self.enemies[i].enemy_type == "alien":
+                if self.enemies[i].x + self.enemies[i].radius >= 600: 
+                    alien_hit_wall = True
                     break
                 elif self.enemies[i].x - self.enemies[i].radius <= 0:
-                    hit_wall = True
+                    alien_hit_wall = True
                     break
+                #checks if alien hit a wall
+        for i in range(len(self.enemies)):
+
+            if self.enemies[i].alive and self.enemies[i].enemy_type == "minion":
+                if self.enemies[i].x + self.enemies[i].radius >= 600: 
+                    minion_hit_wall = True
+                    break
+                elif self.enemies[i].x - self.enemies[i].radius <= 0:
+                    minion_hit_wall = True
+                    break
+
+
+                
         if (
-            hit_wall
+            alien_hit_wall
         ):  # if enemy has hit a wall reverse x direction and drop enemies down
             self.speed_x = -1 * self.speed_x
             self.drop_count += 1
             for i in range(len(self.enemies)):
                 if self.enemies[i].enemy_type == "alien":
                     self.enemies[i].y -= self.speed_y
+        if(minion_hit_wall) == True:
+            self.minion_speed_x = -1 * self.minion_speed_x
 
     # 30/03/26: Luke Abrahamse: Added draw enemies function
     def draw_enemies(self):

@@ -94,7 +94,7 @@ def main() -> None:
 
     # Creating level tracker
     current_level = 1
-    final_level = 2
+    final_level = 4
 
     # 01/04/26: Dillan van Wyk: created infinite game loop
     # Main game loop
@@ -317,12 +317,14 @@ def main() -> None:
                 if current_level < final_level:
                     current_level += 1
                     manager.enemies.clear()
-                    manager.create_minions()
+                    manager.create_minions(current_level)
+                    
 
                     if current_level == final_level:
                         manager.create_boss()
+                        manager.create_enemies()
 
-                        manager.create_minions()  # created once reached final level a boss character spawns
+                        manager.create_minions(current_level)  # created once reached final level a boss character spawns
                     else:
                         manager.difficulty()
                         manager.create_enemies()  # increase the difficulty each new level
