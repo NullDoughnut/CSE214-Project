@@ -47,7 +47,7 @@ class Screen_Manager:
             )
             stddraw.text(WIDTH / 2, HEIGHT * 9 / 20, "P2: [N] to shoot")
 
-            stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[X] to quit")
+            stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[X] to quit, [P] to pause")
 
             stddraw.setFontSize(SUBTITLE_FONT)
             stddraw.text(WIDTH / 2, HEIGHT * 4 / 20, "[1] Single Player   [2] Co-op")
@@ -136,10 +136,11 @@ class Screen_Manager:
             stddraw.text(WIDTH / 2, HEIGHT * 0.8, "PAUSED")
 
             stddraw.setFontSize(SUBTITLE_FONT)
-            stddraw.text(WIDTH / 2,HEIGHT * 0.6,"[R] Resume")
-            stddraw.text(WIDTH / 2,HEIGHT * 0.5,"[T] Restart Game")
-            stddraw.text(WIDTH / 2,HEIGHT * 0.4,"[M] Main Menu")
-            stddraw.text(WIDTH / 2,HEIGHT * 0.3,"[H] Help")
+            stddraw.text(WIDTH / 2, HEIGHT * 0.6, "[R] Resume")
+            stddraw.text(WIDTH / 2, HEIGHT * 0.5, "[T] Restart Game")
+            stddraw.text(WIDTH / 2, HEIGHT * 0.4, "[M] Main Menu")
+            stddraw.text(WIDTH / 2, HEIGHT * 0.3, "[H] Help")
+            stddraw.text(WIDTH / 2, HEIGHT * 0.2, "[X] Quit")
 
             stddraw.show(20)
 
@@ -147,15 +148,15 @@ class Screen_Manager:
                 key = stddraw.nextKeyTyped()
                 if key == "x":
                     quit()
-                elif key == 'r':
+                elif key == "r":
                     return "resume"
-                elif key == 't':
+                elif key == "t":
                     if self.draw_confirm("Restart Game?"):
                         return "restart"
-                elif key == 'm':
+                elif key == "m":
                     if self.draw_confirm("Quit to Menu?"):
                         return "menu"
-                elif key == 'h':
+                elif key == "h":
                     self.draw_help()
 
     # 19/04/26: Luke Abrahamse: Created the confirm screen
@@ -175,7 +176,7 @@ class Screen_Manager:
                 key = stddraw.nextKeyTyped()
                 if key == "x":
                     quit()
-                elif key == 'y':
+                elif key == "y":
                     return True
-                elif key == 'n':
+                elif key == "n":
                     return False

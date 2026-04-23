@@ -123,11 +123,13 @@ def main() -> None:
             ) = reset_game(multiplayer)
             continue
 
+        # 23/04/26: Dillan van Wyk: Fixed bug where boss level did not appear after the shooter dies
         elif game_state == "game_over":
             screen_manager.draw_game_over(WIDTH, HEIGHT)
             stddraw.show(20)
             audio_manager.play_song("assets/gameover")
             score_manager.reset()
+            current_level = 1
             (
                 shooter,
                 manager,
@@ -159,6 +161,9 @@ def main() -> None:
                 key = stddraw.nextKeyTyped()
 
                 # 19/04/26: Luke Abrahamse: Integrated the pause menu
+                # 23/04/26: Dillan van Wyk: Fixed bug where score was not reset when game was restarted from the pause menu
+                #                           and fixed bug where boss level did not appear again when the shooter dies
+                # 23/04/26: Dillan van Wyk: Fixed typo. Was powerup_timer but is meant to be powerup_manager
                 if key == "p":
                     choice = screen_manager.draw_pause_menu()
                     if choice == "restart":
@@ -171,9 +176,11 @@ def main() -> None:
                             enemy_projectile_manager,
                             game_state,
                             state_timer,
-                            powerup_timer,
+                            powerup_manager,
                             bunkers,
                         ) = reset_game(multiplayer)
+                        score_manager.reset()
+                        current_level = 1
                         move_state = None
                         move_state2 = None
                         rotate_state = None
@@ -311,6 +318,7 @@ def main() -> None:
                 shooter2.draw()
 
         # 15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
+        # 23/04/26: Dillan van Wyk: Fixed bug where boss only appeared once even if the player did not die
         if game_state == "playing":
             if manager.check_win():
 
@@ -318,13 +326,14 @@ def main() -> None:
                     current_level += 1
                     manager.enemies.clear()
                     manager.create_minions(current_level)
-                    
 
                     if current_level == final_level:
                         manager.create_boss()
                         manager.create_enemies()
 
-                        manager.create_minions(current_level)  # created once reached final level a boss character spawns
+                        manager.create_minions(
+                            current_level
+                        )  # created once reached final level a boss character spawns
                     else:
                         manager.difficulty()
                         manager.create_enemies()  # increase the difficulty each new level
@@ -339,6 +348,7 @@ def main() -> None:
 
                 else:
                     game_state = "winner"
+                    current_level = 1
 
         # 18/04/26: Dillan van Wyk: Fixed bug were enemies were interacting with dead player by only checking gameover if the shooter has lives
         if shooter.lives > 0:
