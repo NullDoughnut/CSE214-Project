@@ -47,3 +47,50 @@ Placement: The global keyword must be declared before the variable is used insid
 Denlan Molokwu:
 
 Luke Abrahamse:
+Used Claude:
+Prompt: "Guide me on how to implement a pause menu that has the option that resume restart and go back the main screen. I have a screenmanager class that handles my other screens"
+
+Response:
+Add a draw_pause_menu() method to your Screen_Manager that runs its own while True loop — the same pattern you're already using in draw_title_screen(). Return a string like "resume", "restart", or "menu" based on the key pressed. In your main game loop, when "p" is pressed, call choice = screen_manager.draw_pause_menu() and handle the result. For restart, reinitialise everything via your reset_game() function and reset score_manager and current_level. For menu, call main() and return to cleanly restart the call stack.
+
+Prompt: "My shooter can only move once every time i press a key. if i wnat it to keep moving until i press another key, how do I go about that. Dont give me the code guide me to solve it"
+
+Response:
+stddraw.hasNextKeyTyped() only captures key press events, not a held state, so movement only triggers once per keypress. To get continuous movement, you need to decouple detecting the keypress from actually moving the shooter.
+Store the current movement direction in a variable — call it move_state — and update it when keys are pressed. Pressing "a" should set move_state = "left", pressing "d" sets move_state = "right", and pressing "s" sets move_state = None to stop. This variable just remembers the intended direction, it doesn't move anything yet.
+Then, outside the if stddraw.hasNextKeyTyped() block, check move_state every frame and call the appropriate method — so shooter.move_left() if move_state == "left", and shooter.move_right() if move_state == "right". Since this runs every iteration of the game loop regardless of input, the shooter keeps moving until move_state is explicitly changed.
+The same approach applies cleanly to your rotation — a rotate_state variable updated by "q", "e", and "w" keys, with shooter.rotate_left() and shooter.rotate_right() called each frame based on its value.
+
+Used Gemini:
+Prompts:
+"generate a a unique space background for a space invaders game"
+"in the same style, generate a background for a pause menu"
+"generate a spaceship for the shooter in the exact same style"
+"now generate a simple design for an alien spaceship. it should face downwards"
+
+Advanced Features:
+Gameplay:
+Multi-level progression with increasing difficulty
+Boss enemy on the final level, with increased health.
+Minion enemy type with faster projectile speed
+Enemy health bars that appear when damaged
+Bunkers with 5 hit points and colour coded damage states
+
+Combat systems:
+Enemies fir back with random probability per frame
+Projectile-Bunker Collison that destroys bunkers incrementally
+
+Power Ups:
+3 different Power ups(Rapid Fire, Multi-shot and Extra Life)
+15% drop rate when killing enemy
+Co-op Multiplayer:
+2 Player support with separate controls
+
+UI and Screens:
+Pause menu with; Resume, Restart, Main Menu, Help, Quit options
+Confirmation screen before restart and quit to menu actions
+Live score tracking and High Score tracking.
+
+Audio:
+Custom sound affects for shooting, taking damage, collecting power ups, game-over and winning.
+Shooting sound effects
