@@ -42,7 +42,20 @@ Important Rules and Considerations
 Access vs. Modification: You can read (access) global variables inside a function without the global keyword, but you cannot reassign (modify) them.
 Mutable Objects: If a global variable is a mutable object (like a list or dictionary), you can modify its contents (e.g., list.append()) without the global keyword. You only need global when you want to reassign the variable to a new object (e.g., list = [1, 2]).
 Best Practice: Overusing global is discouraged because it can make code harder to debug and understand (spaghetti code). It is better to pass variables to functions and return the updated values.
-Placement: The global keyword must be declared before the variable is used inside the function. 
+Placement: The global keyword must be declared before the variable is used inside the function.
+
+Used Claude:
+Prompt: "When game is reset from the pause menu the current score is not reset. The boss level only appears on the first game — if the shooter dies the boss levels do not appear again."
+
+Response: "Both bugs are in space_invaders.py. The score isn't being reset in the pause menu restart branch — it's only reset in the game over path. The boss not reappearing is because current_level is never reset when the game restarts, so the level progression logic never runs again properly."
+
+Prompt: "After the boss is defeated the first time it never appears again. Powerups don't disappear when the game is restarted from the pause menu."
+
+Response: "The boss issue is that current_level stays at final_level after the boss is beaten, so on the next playthrough it jumps straight to the winner state. The powerup issue is a typo in the pause restart unpack — the fresh Powerup_Manager is being caught into a variable named powerup_timer instead of powerup_manager, so the old one with lingering powerups keeps being used." 
+
+Prompt: "The player 2 movement is not working at all."
+
+Response: "stddraw only queues one keypress per frame, and player 1's input block is consuming it before player 2 gets a chance. Read the key once and route it to both players in the same block instead of using two separate hasNextKeyTyped() calls."
 
 Denlan Molokwu:
 
