@@ -84,7 +84,7 @@ class Minions:
         p.x = self.x
         p.y = self.y - self.radius
         p.angle = 270
-        p.speed = p.speed * 1.3
+        p.speed = p.speed * 0.5
         return p
 
     # 23/04/26: Dillan van Wyk: Added method to draw enemy health bar

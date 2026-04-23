@@ -108,8 +108,7 @@ class Projectile_Manager:
 
                     break
 
-        # Projectile off-screen removal and movement of projectiles
-        for p in self.projectiles[:]:
+            # Projectile off-screen removal and movement of projectiles
             if (p.x < x_min or p.x > x_max) or (p.y < y_min or p.y > y_max):
                 self.projectiles.remove(p)
             else:

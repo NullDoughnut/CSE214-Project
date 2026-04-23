@@ -15,7 +15,7 @@ class Shooter:
         self.speed = 10  # movement speed
         self.angle = 90  # starting angle
         self.rotate_speed = 5  # rotation speed
-        self.turret_length = 20
+        self.turret_length = 30
         self.radius = 15
         self.lives = 3
         self.color = stddraw.CYAN
@@ -23,17 +23,19 @@ class Shooter:
     # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
     # 23/04/26: Dillan van Wyk: Added on_cooldown parameter so that the turrent can be turned red for when the shooter can't shoot
     def draw(self, on_cooldown=False):
-        # Draw colored circle at the bottom of the shooter
+        # Draw coloured triangle around shooter
         stddraw.setPenColor(self.color)
-        stddraw.filledCircle(self.x, self.y - self.radius, self.radius * 0.5)
+        stddraw.filledPolygon(
+            [self.x - 25, self.x + 25, self.x], [self.y - 20, self.y - 20, self.y + 45]
+        )
 
         # Draw shooter body
         stddraw.picture(
             shooter_img,
             self.x,
             self.y,
-            self.radius * 3.5,
-            self.radius * 3.5,
+            self.radius * 4.5,
+            self.radius * 4.5,
         )
 
         # Draw turret
@@ -41,7 +43,7 @@ class Shooter:
             stddraw.setPenColor(stddraw.RED)
         else:
             stddraw.setPenColor(stddraw.YELLOW)
-        stddraw.setPenRadius(0.01)
+        stddraw.setPenRadius(1.5)
         stddraw.line(
             self.x,
             self.y,

@@ -282,12 +282,13 @@ def main() -> None:
         # Checks for collisions between enemy projectiles and the player(s)
         # 20/04/26: Dillan van Wyk: Fixed bug were enemies are pushed back when shooter gets hit by enemy projectile
         for p in enemy_projectile_manager.projectiles[:]:
+            hit = False
             if collision(p, shooter) and shooter.lives > 0:
                 shooter.lives -= 1
                 shooter.x = 300
                 shooter.angle = 90
                 audio_manager.play_song("assets/hurt")
-                enemy_projectile_manager.projectiles.remove(p)
+                hit = True
 
             if multiplayer:
                 if collision(p, shooter2) and shooter2.lives > 0:
@@ -295,7 +296,9 @@ def main() -> None:
                     shooter2.x = 450
                     shooter2.angle = 90
                     audio_manager.play_song("assets/hurt")
-                    enemy_projectile_manager.projectiles.remove(p)
+                    hit = True
+            if hit:
+                enemy_projectile_manager.projectiles.remove(p)
 
         # 19/04/26: Luke Abrahamse: added powerup updates and draw
         powerup_manager.update(shooter, projectile_manager)
@@ -347,7 +350,8 @@ def main() -> None:
                         b.x = 100 + (i * 175)
                         b.y = 150
                         bunkers.append(b)
-                    projectile_manager = Projectile_Manager()
+                    projectile_manager.projectiles.clear()
+                    projectile_manager.cooldown = 0
 
                 else:
                     game_state = "winner"

@@ -50,7 +50,7 @@ class Screen_Manager:
             stddraw.text(WIDTH / 2, HEIGHT * 7 / 20, "[X] to quit, [P] to pause")
 
             stddraw.setFontSize(SUBTITLE_FONT)
-            stddraw.text(WIDTH / 2, HEIGHT * 4 / 20, "[1] Single Player   [2] Co-op")
+            stddraw.text(WIDTH / 2, HEIGHT * 5.2 / 20, "[1] Single Player   [2] Co-op")
 
             stddraw.show(20)
 

@@ -9,9 +9,9 @@ import random
 class Game_manager:
     def __init__(self):
         self.enemies = []  # list to store all enemy objects
-        self.speed_x = 3  # speed of enemy in x direction
+        self.speed_x = 2.5  # speed of enemy in x direction
         self.minion_speed_x = 5  # speed of minion in x direction
-        self.speed_y = 30  # speed of enemys in y direction
+        self.speed_y = 15  # speed of enemys in y direction
 
         self.drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
 
