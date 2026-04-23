@@ -307,15 +307,18 @@ def main() -> None:
             b.draw()  # draws bunkers
 
         # Draw enemies and shooter
+        # 23/04/26: Dillan van Wyk: Passes whether the shooter is on cooldown to draw() so that the turret color can be updated
         manager.refresh_enemies()
         manager.draw_enemies()
         if shooter.lives > 0:
-            shooter.draw()
+            on_cooldown = projectile_manager.cooldown > 0
+            shooter.draw(on_cooldown)
 
         # 18/04/26: Dillan van Wyk: Draw player 2
         if multiplayer:
             if shooter2.lives > 0:
-                shooter2.draw()
+                on_cooldown = projectile_manager.cooldown > 0
+                shooter2.draw(on_cooldown)
 
         # 15/04/26: Denlan Molokwu: Created the concept of different levels and the addition of a boss once reached the end
         # 23/04/26: Dillan van Wyk: Fixed bug where boss only appeared once even if the player did not die

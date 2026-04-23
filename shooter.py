@@ -21,7 +21,8 @@ class Shooter:
         self.color = stddraw.CYAN
 
     # 09/04/26: Dillan van Wyk: Added enhanced graphics (shooter.png)
-    def draw(self):
+    # 23/04/26: Dillan van Wyk: Added on_cooldown parameter so that the turrent can be turned red for when the shooter can't shoot
+    def draw(self, on_cooldown=False):
         # Draw colored circle at the bottom of the shooter
         stddraw.setPenColor(self.color)
         stddraw.filledCircle(self.x, self.y - self.radius, self.radius * 0.5)
@@ -36,7 +37,10 @@ class Shooter:
         )
 
         # Draw turret
-        stddraw.setPenColor(stddraw.YELLOW)
+        if on_cooldown:
+            stddraw.setPenColor(stddraw.RED)
+        else:
+            stddraw.setPenColor(stddraw.YELLOW)
         stddraw.setPenRadius(0.01)
         stddraw.line(
             self.x,

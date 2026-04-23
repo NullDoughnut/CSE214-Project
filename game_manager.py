@@ -9,8 +9,8 @@ import random
 class Game_manager:
     def __init__(self):
         self.enemies = []  # list to store all enemy objects
-        self.speed_x = 3   # speed of enemy in x direction
-        self.minion_speed_x = 5 # speed of minion in x direction
+        self.speed_x = 3  # speed of enemy in x direction
+        self.minion_speed_x = 5  # speed of minion in x direction
         self.speed_y = 30  # speed of enemys in y direction
 
         self.drop_count = 0  # this creates a variable that keeps track of how many times the enemies dropped
@@ -27,10 +27,11 @@ class Game_manager:
                 enemy = Enemy()
                 enemy.x = x + j * spacing
                 enemy.y = y - i * spacing
-                enemy.enemy_type = "alien"  #ensures every alien has a type
+                enemy.enemy_type = "alien"  # ensures every alien has a type
                 self.enemies.append(enemy)
 
-    # 15/04/2026: Denlan Molokwu: Created new enemy types called the boss and the minions
+    # 15/04/26: Denlan Molokwu: Created new enemy types called the boss and the minions
+    # 23/04/26: Dillan van Wyk: Gave boss a health of 3
     def create_boss(self):
         boss = Enemy()
 
@@ -39,11 +40,13 @@ class Game_manager:
 
         boss.radius = 35
         boss.enemy_type = "boss"
+        boss.health = 3
+        boss.max_health = 3
 
         self.enemies.append(boss)
 
-    def create_minions(self,level):
-        num_minions = level + 1  #logic to spawn more minions each level
+    def create_minions(self, level):
+        num_minions = level + 1  # logic to spawn more minions each level
         spacing = 60
         for i in range(num_minions):
             minions = Minions()
@@ -56,7 +59,7 @@ class Game_manager:
 
     # 30/03/26: Luke Abrahamse: Added refresh_enemies function to update the state of each enemy
     # 02/04/26: Luke Abrahamse: Fixed enemy wall collision bug
-    #21/04/2026: Denlan Molokwu: Fixed the way collisions affected bumping against the wall so minion and enemies behaved differently
+    # 21/04/2026: Denlan Molokwu: Fixed the way collisions affected bumping against the wall so minion and enemies behaved differently
     def refresh_enemies(self):  # incriments all enemys in x direction by current speed
 
         for i in range(len(self.enemies)):
@@ -70,25 +73,23 @@ class Game_manager:
 
         for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
             if self.enemies[i].alive and self.enemies[i].enemy_type == "alien":
-                if self.enemies[i].x + self.enemies[i].radius >= 600: 
+                if self.enemies[i].x + self.enemies[i].radius >= 600:
                     alien_hit_wall = True
                     break
                 elif self.enemies[i].x - self.enemies[i].radius <= 0:
                     alien_hit_wall = True
                     break
-                #checks if alien hit a wall
+                # checks if alien hit a wall
         for i in range(len(self.enemies)):
 
             if self.enemies[i].alive and self.enemies[i].enemy_type == "minion":
-                if self.enemies[i].x + self.enemies[i].radius >= 600: 
+                if self.enemies[i].x + self.enemies[i].radius >= 600:
                     minion_hit_wall = True
                     break
                 elif self.enemies[i].x - self.enemies[i].radius <= 0:
                     minion_hit_wall = True
                     break
 
-
-                
         if (
             alien_hit_wall
         ):  # if enemy has hit a wall reverse x direction and drop enemies down
@@ -97,7 +98,7 @@ class Game_manager:
             for i in range(len(self.enemies)):
                 if self.enemies[i].enemy_type == "alien":
                     self.enemies[i].y -= self.speed_y
-        if(minion_hit_wall) == True:
+        if (minion_hit_wall) == True:
             self.minion_speed_x = -1 * self.minion_speed_x
 
     # 30/03/26: Luke Abrahamse: Added draw enemies function
@@ -168,5 +169,3 @@ class Game_manager:
                 projectiles.append(enemy.shoot())
 
         return projectiles
-
-

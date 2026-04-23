@@ -57,10 +57,12 @@ class Projectile:
 # 18/04/26: Dillan van Wyk: Moved from class attributes to instance attributes
 # 19/04/26: Denlan Molokwu: Implemented logic for bunker collision
 # 20/04/26: Dillan van Wyk: Added score tracking based off enemy colision in update method
+# 23/04/26: Dillan van Wyk: Enemies now have health. They should now only die when their health is zero and score only added when enemy dies
+#                           and enemies should only drop powerups if they die
 class Projectile_Manager:
     def __init__(self):
         self.projectiles = []
-        self.max_cooldown = 15
+        self.max_cooldown = 10
         self.cooldown = 0
 
     def update(
@@ -96,11 +98,14 @@ class Projectile_Manager:
             # Added score tracking
             for e in enemies:
                 if e.alive and collision(p, e):
-                    e.alive = False
-                    score_mgr.register_points(100)
-                    if powerup_manager:
-                        powerup_manager.spawn_powerup(e.x, e.y)
+                    e.health -= 1
                     self.projectiles.remove(p)
+                    if e.health <= 0:
+                        e.alive = False
+                        score_mgr.register_points(100)
+                        if powerup_manager:
+                            powerup_manager.spawn_powerup(e.x, e.y)
+
                     break
 
         # Projectile off-screen removal and movement of projectiles
