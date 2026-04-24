@@ -58,6 +58,12 @@ Prompt: "The player 2 movement is not working at all."
 Response: "stddraw only queues one keypress per frame, and player 1's input block is consuming it before player 2 gets a chance. Read the key once and route it to both players in the same block instead of using two separate hasNextKeyTyped() calls."
 
 Denlan Molokwu:
+Used Gemini:
+Prompt: "The bunkers are working mathematically but are not showing up on the screen, even though the code is there."
+Response: Identified a Z-index (draw order) and syntax bug. The bunkers were either being drawn before the background image (causing them to be covered up) or the .draw method was missing parentheses. Advised moving the bunker drawing loop to the very end of the render phase.
+prompt:What could i do to fix the aliens and minions bouncing at the same time
+ Response: Identify the "short leash" bug. Decouple the minion and alien movement into separate loops with independent speed variables so their wall-collision checks wouldn't cancel each other out.
+Used gemini different times to just help me understand the code my teammates coded, just for better understanding too.
 
 Luke Abrahamse:
 Used Claude:

@@ -85,11 +85,15 @@ class Projectile_Manager:
             bullet_destroyed = False  # helps identify if it has hit the bunker and if it has the bullet ultimately gets destroyed
 
             for b in bunker:
-                if b.alive and bunker_collision(p, b):
-                    b.health -= 1
-                    if b.health <= 0:
+                if b.alive and bunker_collision(
+                    p, b
+                ):  # if the bunker has not been destroyed do below
+                    b.health -= 1  # if the bunker has been hit by a projectile minus 1 from health
+                    if b.health <= 0:  # if bunker has been destroyed remove essentially
                         b.alive = False
-                    self.projectiles.remove(p)
+                    self.projectiles.remove(
+                        p
+                    )  # if projectile has hit bunker remove projectile of screen
                     bullet_destroyed = True
                     break
             if bullet_destroyed:

@@ -33,13 +33,13 @@ class Game_manager:
     # 15/04/26: Denlan Molokwu: Created new enemy types called the boss and the minions
     # 23/04/26: Dillan van Wyk: Gave boss a health of 3
     def create_boss(self):
-        boss = Enemy()
+        boss = Enemy()  # allows access to whats in the enemy class
 
-        boss.x = 300
+        boss.x = 300  # initializing where the boss must be placed on the screen
         boss.y = 530
 
         boss.radius = 35
-        boss.enemy_type = "boss"
+        boss.enemy_type = "boss"  # this allowed for easier coding as certain things were to only implemented for the boss
         boss.health = 3
         boss.max_health = 3
 
@@ -51,7 +51,7 @@ class Game_manager:
         for i in range(num_minions):
             minions = Minions()
 
-            minions.x = 100 + (i * spacing)
+            minions.x = 100 + (i * spacing)  # just keeps them evenly spaced
             minions.y = 450
             minions.radius = 15
             minions.enemy_type = "minion"
@@ -63,13 +63,15 @@ class Game_manager:
     def refresh_enemies(self):  # incriments all enemys in x direction by current speed
 
         for i in range(len(self.enemies)):
-            if self.enemies[i].enemy_type == "alien":
+            if (
+                self.enemies[i].enemy_type == "alien"
+            ):  # this implemented everything that would affect the alienes and minions using the enemy type variable
                 self.enemies[i].x += self.speed_x
             elif self.enemies[i].enemy_type == "minion":
                 self.enemies[i].x += self.minion_speed_x
 
         alien_hit_wall = False
-        minion_hit_wall = False
+        minion_hit_wall = False  # didnt want them to hit the wall same time
 
         for i in range(len(self.enemies)):  # checks if any enemy has hit a wall
             if self.enemies[i].alive and self.enemies[i].enemy_type == "alien":
@@ -79,7 +81,7 @@ class Game_manager:
                 elif self.enemies[i].x - self.enemies[i].radius <= 0:
                     alien_hit_wall = True
                     break
-                # checks if alien hit a wall
+                # checks if alien and minion hit a wall
         for i in range(len(self.enemies)):
 
             if self.enemies[i].alive and self.enemies[i].enemy_type == "minion":
@@ -137,7 +139,7 @@ class Game_manager:
     def check_win(self):
 
         for enemy in self.enemies:
-            if enemy.alive == True:
+            if enemy.alive == True:  # if there are no enemies left youre a winner
                 return False
         return True
 
@@ -146,7 +148,7 @@ class Game_manager:
     def score_tracker(self):
         score = 0
         for enemy in self.enemies:
-            if enemy.alive == False:
+            if enemy.alive == False:  # each time enemy dies +100 points
                 score += 100
         return score
 

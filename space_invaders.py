@@ -32,6 +32,7 @@ def reset_game(multiplayer):
     powerup_manager = Powerup_Manager()
 
     # 18/04/26: Dillan van Wyk: Spawns player 1 on the left of the screen and player 2 on the right of the screen, if playing co-op
+    # 20/04/26: Denlan Molokwu: Generated the bunkers in game
     if multiplayer:
         shooter2 = Shooter()
         shooter2.x = 450
@@ -43,7 +44,9 @@ def reset_game(multiplayer):
         b = Bunker()
         b.x = 100 + (i * 175)
         b.y = 150
-        bunkers.append(b)
+        bunkers.append(
+            b
+        )  # make a list of 3 bunkers that are evenly spaced using thhe Bunker classs created
 
     return (
         shooter,

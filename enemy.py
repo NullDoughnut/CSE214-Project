@@ -2,7 +2,7 @@ import stddraw
 from picture import Picture as pic
 from projectile import Projectile
 
-
+# 15/04/26: Denlan Molokwu: Created the images for the minions
 enemy_img = pic("assets/alien.png")
 minions_img = pic("assets/spaceShips_002.png")
 
@@ -80,11 +80,13 @@ class Minions:
     # 19/04/26: Denlan: Implemented the fact minions can shoot back at increase speed each level
     def shoot(self):
         p = Projectile()
-        p.speed = 12
+        p.speed = 12  # speed of the projectile of the minions that shoot back
         p.x = self.x
-        p.y = self.y - self.radius
+        p.y = (
+            self.y - self.radius
+        )  # this allows the projectile to go down instead of up
         p.angle = 270
-        p.speed = p.speed * 0.5
+        p.speed = p.speed * 1.2  # as each level goes by minions shoot back faster
         return p
 
     # 23/04/26: Dillan van Wyk: Added method to draw enemy health bar
