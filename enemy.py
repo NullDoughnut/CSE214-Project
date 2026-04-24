@@ -4,7 +4,7 @@ from projectile import Projectile
 
 # 15/04/26: Denlan Molokwu: Created the images for the minions
 enemy_img = pic("assets/alien.png")
-minions_img = pic("assets/spaceShips_002.png")
+minions_img = pic("assets/enemy_spaceship.png")
 
 
 # 30/03/26: Luke Abrahamse: created enemy object

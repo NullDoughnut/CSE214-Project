@@ -43,7 +43,7 @@ def reset_game(multiplayer):
     for i in range(3):
         b = Bunker()
         b.x = 100 + (i * 175)
-        b.y = 150
+        b.y = 100
         bunkers.append(
             b
         )  # make a list of 3 bunkers that are evenly spaced using thhe Bunker classs created
@@ -351,7 +351,7 @@ def main() -> None:
                     for i in range(3):
                         b = Bunker()
                         b.x = 100 + (i * 175)
-                        b.y = 150
+                        b.y = 100
                         bunkers.append(b)
                     projectile_manager.projectiles.clear()
                     projectile_manager.cooldown = 0

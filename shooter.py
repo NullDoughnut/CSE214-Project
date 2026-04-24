@@ -12,7 +12,7 @@ class Shooter:
     def __init__(self):
         self.x = 300  # starting x coordinates
         self.y = 30  # starting y coordinate
-        self.speed = 10  # movement speed
+        self.speed = 15  # movement speed
         self.angle = 90  # starting angle
         self.rotate_speed = 5  # rotation speed
         self.turret_length = 30

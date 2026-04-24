@@ -62,7 +62,7 @@ class Projectile:
 class Projectile_Manager:
     def __init__(self):
         self.projectiles = []
-        self.max_cooldown = 10
+        self.max_cooldown = 7
         self.cooldown = 0
 
     def update(
